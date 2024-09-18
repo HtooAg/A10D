@@ -100,7 +100,7 @@ const SplashScreen = () => {
                 transform: [{perspective: 1000}, {rotateY}],
               },
             ]}
-            source={require('../assets/images/location.png')}
+            source={require('../assets/imgs/location.png')}
           />
           <Text style={styles.text}>A 10 D</Text>
         </View>

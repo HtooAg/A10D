@@ -110,13 +110,12 @@ const styles = StyleSheet.create({
     fontSize: 35,
     fontWeight: 'bold',
     color: 'white',
-   
   },
   card: {
     flex: 1,
     width: '90%',
     alignSelf: 'center',
-    marginTop: 20
+    marginTop: 20,
   },
   inputContainer: {
     flexDirection: 'row',

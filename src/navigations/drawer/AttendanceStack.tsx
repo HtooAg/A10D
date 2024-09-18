@@ -1,8 +1,8 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import Attendance from './Attendence';
-import AttendanceDetails from './AttendenceDetails';
+import Attendance from './Attendance';
+import AttendanceDetails from './AttendanceDetails';
 import AttendanceDetailOfLocation from './AttendanceDetailOfLocation';
 
 const AttendanceStack: React.FC = () => {

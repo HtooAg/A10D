@@ -1,14 +1,14 @@
 import { StyleSheet, SafeAreaView, StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import LoginRegister from './components/LoginRegister';
-import SpaceId from './components/SpaceId';
-import ContextProvider from './components/Context';
+import LoginRegister from './src/navigations/stack/LoginRegister';
+import SpaceId from './src/components/SpaceId';
+import ContextProvider from './src/components/Context';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { useState, useEffect } from 'react';
 import Orientation from 'react-native-orientation-locker';
-import DrawerApp from './navigations/DrawerApp';
-import SplashScreen from './components/SplashScreen';
+import DrawerApp from './src/navigations/DrawerApp';
+import SplashScreen from './src/components/SplashScreen';
 export default function App() {
   const Drawer = createDrawerNavigator();
   const Stack = createNativeStackNavigator();

@@ -14,10 +14,10 @@ import {
 
 import Login from './Login';
 import Register from './Register';
-import Header from '../navigations/Header';
+import Header from '../Header';
 import {FC, useState} from 'react';
 import {ArrowLeft} from 'lucide-react-native';
-import {NavigationType} from '../type_hint/navType';
+import {NavigationType} from '../../type_hint/navType';
 
 const LoginRegister: FC<NavigationType> = ({navigation}) => {
   const screenWidth = Dimensions.get('window').width; // Get screen width

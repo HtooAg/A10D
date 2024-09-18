@@ -16,9 +16,9 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
 } from 'react-native';
-import Header from '../navigations/Header';
-import {NavigationType} from '../type_hint/navType';
-import ContextProvider from './Context';
+import Header from '../Header';
+import {NavigationType} from '../../type_hint/navType';
+import ContextProvider from '../../components/Context';
 
 const Login: FC<{navigation: any}> = ({navigation}) => {
   const [email, setEmail] = useState('');

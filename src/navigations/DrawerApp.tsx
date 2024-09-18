@@ -4,7 +4,7 @@ import { Smartphone } from 'lucide-react-native';
 import { useState } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import Change from './drawer/Change';
+import Change from './drawer/ChangePassword';
 import Home from './drawer/Home';
 import Help from './drawer/Help';
 import Noti from './drawer/Noti';
@@ -18,7 +18,7 @@ import {
 } from 'lucide-react-native';
 import LocationStack from './LocationStack';
 import LogoutDrawer from './drawer/LogoutDrawer';
-import AttendanceStack from './drawer/AttendenceStack';
+import AttendanceStack from './drawer/AttendanceStack';
 const DrawerApp: React.FC<NavigationType> = ({navigation}) => {
   const Drawer = createDrawerNavigator();
   const Stack = createNativeStackNavigator();

@@ -5,9 +5,9 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import {NavigationType} from '../type_hint/navType';
+import {NavigationType} from '../../type_hint/navType';
 import {FC, useState} from 'react';
-import Header from '../navigations/Header';
+import Header from '../Header';
 import {
   ArrowLeft,
   Eye,
