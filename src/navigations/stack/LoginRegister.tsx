@@ -19,7 +19,9 @@ import {FC, useState} from 'react';
 import {ArrowLeft} from 'lucide-react-native';
 import {NavigationType} from '../../type_hint/navType';
 
-const LoginRegister: FC<NavigationType> = ({navigation}) => {
+const LoginRegister: FC<NavigationType> = ({navigation, route}) => {
+  const {spaceId} = route.params;
+
   const screenWidth = Dimensions.get('window').width; // Get screen width
   const [isToggle, setIsToggle] = useState(true);
 
@@ -89,7 +91,11 @@ const LoginRegister: FC<NavigationType> = ({navigation}) => {
                   </Text>
                 </TouchableOpacity>
               </View>
-              {isToggle ? <Login navigation={navigation} /> : <Register />}
+              {isToggle ? (
+                <Login navigation={navigation} />
+              ) : (
+                <Register spaceId={spaceId} />
+              )}
             </View>
           </ScrollView>
         </TouchableWithoutFeedback>

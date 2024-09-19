@@ -11,10 +11,12 @@
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^4.6.4",
+    "@react-native-async-storage/async-storage": "^2.0.0",
     "@react-native-picker/picker": "github:react-native-picker/picker",
     "@react-navigation/drawer": "^6.7.2",
     "@react-navigation/native": "^6.1.18",
     "@react-navigation/native-stack": "^6.11.0",
+    "@reduxjs/toolkit": "^2.2.7",
     "axios": "^1.7.7",
     "lucide-react-native": "^0.439.0",
     "moment-timezone": "^0.5.45",
@@ -36,7 +38,8 @@
     "react-native-safe-area-context": "^4.11.0",
     "react-native-screens": "^3.34.0",
     "react-native-select-dropdown": "^4.0.1",
-    "react-native-svg": "^15.6.0"
+    "react-native-svg": "^15.6.0",
+    "redux-persist": "^6.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

@@ -11,7 +11,7 @@ import {
 import SelectDropdown from 'react-native-select-dropdown';
 import {ChevronDown, ChevronUp} from 'lucide-react-native';
 import {useFocusEffect} from '@react-navigation/native';
-import {NavigationType} from '../type_hint/navType';
+import {NavigationType} from '../../type_hint/navType';
 
 const SpaceId: FC<NavigationType> = ({navigation}) => {
   const screenWidth = Dimensions.get('window').width;
@@ -28,32 +28,20 @@ const SpaceId: FC<NavigationType> = ({navigation}) => {
     },
   });
 
-  useFocusEffect(
-    React.useCallback(() => {
-      reset({spaceName: 'Space name'});
-    }, [reset]),
-  );
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     reset({spaceName: 'Space name'});
+  //   }, [reset]),
+  // );
 
-  const onSubmit = data => {
-    console.log('Data: ', data);
-    navigation.navigate('Login');
+  const onSubmit = (data) => {
+    
+    navigation.navigate('Login', {spaceId: data.spaceName});
   };
 
   const emojisWithIcons = [
-    {title: 'happy'},
-    {title: 'cool'},
-    {title: 'lol'},
-    {title: 'sad'},
-    {title: 'cry'},
-    {title: 'angry'},
-    {title: 'confused'},
-    {title: 'excited'},
-    {title: 'kiss'},
-    {title: 'devil'},
-    {title: 'dead'},
-    {title: 'wink'},
-    {title: 'sick'},
-    {title: 'frown'},
+    {title: 2},
+    
   ];
 
   return (
@@ -84,9 +72,7 @@ const SpaceId: FC<NavigationType> = ({navigation}) => {
           control={control}
           rules={{
             validate: value => {
-              if (value === 'Space name' || value === '') {
-                return 'Please select a valid space name';
-              } else if (!value) {
+               if (!value) {
                 return 'Space name is required';
               }
               return true;
@@ -105,14 +91,12 @@ const SpaceId: FC<NavigationType> = ({navigation}) => {
                     </Text>
                   ) : (
                     <TextInput
-                      value={selectedItem}
+                      value={value}
                       placeholder="Space name"
-                      placeholderTextColor="#ccc"
+                      placeholderTextColor="#000"
                       autoCapitalize="none"
                       cursorColor={'#000'}
-                      onChangeText={text => {
-                        onChange(text);
-                      }}
+                      onChangeText={onChange}
                       style={styles.textInput}
                     />
                   )}
@@ -141,7 +125,7 @@ const SpaceId: FC<NavigationType> = ({navigation}) => {
         />
         {errors.spaceName && (
           <Text style={{color: 'red', marginTop: 5}}>
-            {errors.spaceName.message}
+            {errors.spaceName.message} Space name is required.
           </Text>
         )}
       </View>
@@ -189,7 +173,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 18,
     fontWeight: '500',
-    color: '#031f0a',
+    color: '#000',
   },
   dropdownMenuStyle: {
     backgroundColor: '#E9ECEF',
@@ -211,6 +195,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     flex: 1,
+    color: '#151E26',
   },
 });
 
