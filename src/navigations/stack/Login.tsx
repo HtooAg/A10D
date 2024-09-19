@@ -41,23 +41,22 @@ const Login: FC<{navigation: any}> = ({navigation, spaceId}) => {
   });
 
   const dispatch = useDispatch();
-  const {login} = useSelector(state => state.login);
+  const login = useSelector(state => state.login.loginUser);
   console.log(login)
 
   const onSubmit = async loginData => {
     try {
-
-      const fetchAPI = await fetch(
-        `/api/v1/users/user-login?space-id=${loginData.space_id}&email=${loginData.email}&password=${loginData.password}`
+      const fetchAPI = await postRequest(
+        `/api/v1/users/user-login?`,
+        loginData,
       );
-      const res = await fetchAPI.json();
       //  const serializableData = {
       //    data: fetchAPI.data.data,
       //    message: fetchAPI.data.message,
       //    status: fetchAPI.data.status,
       //  };
-       console.log(res.data);
-      // dispatch(addUser());
+      // console.log(fetchAPI.config.data);
+      dispatch(addUser(fetchAPI.config.data));
     } catch (error) {
       console.log('Failed to login:', error);
     }
