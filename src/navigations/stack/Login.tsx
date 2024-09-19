@@ -51,12 +51,22 @@ const Login: FC<{navigation: any}> = ({navigation, spaceId}) => {
         loginData,
       );
       //  const serializableData = {
-      //    data: fetchAPI.data.data,
+      //    data: fetchAPI.config.data,
+         
       //    message: fetchAPI.data.message,
-      //    status: fetchAPI.data.status,
+      //    status: fetchAPI.status,
       //  };
-      // console.log(fetchAPI.config.data);
+      // console.log(fetchAPI.config);
       dispatch(addUser(fetchAPI.config.data));
+      if(fetchAPI.status === 200){
+        navigation.navigate('Home', {
+          screen: 'HomeStack',
+          params: {
+            spaceId: spaceId,
+            userId: fetchAPI.config.data.id,
+          },
+        });
+      }
     } catch (error) {
       console.log('Failed to login:', error);
     }

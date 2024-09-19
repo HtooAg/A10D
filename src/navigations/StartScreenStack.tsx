@@ -4,6 +4,8 @@ import React, {Component} from 'react';
 import {Text, View} from 'react-native';
 import SpaceId from './stack/SpaceId';
 import LoginRegister from './stack/LoginRegister';
+import DrawerApp from './DrawerApp';
+import Home from './drawer/Home';
 
 const StartScreenStack = () => {
   const Stack = createNativeStackNavigator();
@@ -17,6 +19,11 @@ const StartScreenStack = () => {
       <Stack.Screen
         name="Login"
         component={LoginRegister}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Home"
+        component={DrawerApp} 
         options={{headerShown: false}}
       />
     </Stack.Navigator>

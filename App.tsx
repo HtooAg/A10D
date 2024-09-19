@@ -62,11 +62,6 @@ export default function App() {
                       component={StartScreenStack}
                       options={{headerShown: false}}
                     />
-                    <Stack.Screen
-                      name="DrawerApp"
-                      component={DrawerApp}
-                      options={{headerShown: false}}
-                    />
                   </Stack.Navigator>
                 )}
               </ContextProvider.Provider>
