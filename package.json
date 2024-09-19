@@ -39,6 +39,7 @@
     "react-native-screens": "^3.34.0",
     "react-native-select-dropdown": "^4.0.1",
     "react-native-svg": "^15.6.0",
+    "react-redux": "^9.1.2",
     "redux-persist": "^6.0.0"
   },
   "devDependencies": {

@@ -10,6 +10,11 @@ import Orientation from 'react-native-orientation-locker';
 import DrawerApp from './src/navigations/DrawerApp';
 import SplashScreen from './src/components/SplashScreen';
 import StartScreenStack from './src/navigations/StartScreenStack';
+import {Provider} from 'react-redux';
+import { store, persistor } from './src/store/Store';
+import { PersistGate } from 'redux-persist/es/integration/react';
+
+
 export default function App() {
   const Drawer = createDrawerNavigator();
   const Stack = createNativeStackNavigator();
@@ -31,38 +36,43 @@ export default function App() {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor="#0032fc" />
-      <NavigationContainer>
-        <ContextProvider.Provider
-          value={{
-            isLogin,
-            setIsLogin,
-            changeDevice,
-            setChangeDevice,
-            changeModal,
-            setChangeModal,
-            emailModalVisible,
-            setEmailModalVisible,
-            callModalVisible,
-            setCallModalVisible,
-          }}>
-          {showSplash ? (
-            <SplashScreen />
-          ) : (
-            <Stack.Navigator>
-              <Stack.Screen
-                name="SpaceId"
-                component={StartScreenStack}
-                options={{headerShown: false}}
-              />
-              <Stack.Screen
-                name="DrawerApp"
-                component={DrawerApp}
-                options={{headerShown: false}}
-              />
-            </Stack.Navigator>
-          )}
-        </ContextProvider.Provider>
-      </NavigationContainer>
+      <Provider store={store}>
+        <PersistGate persistor={persistor}>
+
+            <NavigationContainer>
+              <ContextProvider.Provider
+                value={{
+                  isLogin,
+                  setIsLogin,
+                  changeDevice,
+                  setChangeDevice,
+                  changeModal,
+                  setChangeModal,
+                  emailModalVisible,
+                  setEmailModalVisible,
+                  callModalVisible,
+                  setCallModalVisible,
+                }}>
+                {showSplash ? (
+                  <SplashScreen />
+                ) : (
+                  <Stack.Navigator>
+                    <Stack.Screen
+                      name="SpaceId"
+                      component={StartScreenStack}
+                      options={{headerShown: false}}
+                    />
+                    <Stack.Screen
+                      name="DrawerApp"
+                      component={DrawerApp}
+                      options={{headerShown: false}}
+                    />
+                  </Stack.Navigator>
+                )}
+              </ContextProvider.Provider>
+            </NavigationContainer>
+        </PersistGate>
+      </Provider>
     </SafeAreaView>
   );
 }
