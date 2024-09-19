@@ -21,6 +21,9 @@ import {NavigationType} from '../../type_hint/navType';
 import ContextProvider from '../../components/Context';
 import {Controller, useForm} from 'react-hook-form';
 import {postRequest} from '../../api/Api';
+import {createSlice} from '@reduxjs/toolkit';
+import { useDispatch, useSelector } from 'react-redux';
+import { addUser } from '../../features/login/loginSlice';
 
 const Login: FC<{navigation: any}> = ({navigation, spaceId}) => {
   const {
@@ -37,28 +40,31 @@ const Login: FC<{navigation: any}> = ({navigation, spaceId}) => {
     },
   });
 
+  const dispatch = useDispatch();
+  const {login} = useSelector(state => state.login);
+  console.log(login)
+
   const onSubmit = async loginData => {
     try {
-      const fetchAPI = await postRequest(
-        `/api/v1/users/user-login?`,
-        loginData,
+
+      const fetchAPI = await fetch(
+        `/api/v1/users/user-login?space-id=${loginData.space_id}&email=${loginData.email}&password=${loginData.password}`
       );
-      console.log(fetchAPI.headers);
+      const res = await fetchAPI.json();
+      //  const serializableData = {
+      //    data: fetchAPI.data.data,
+      //    message: fetchAPI.data.message,
+      //    status: fetchAPI.data.status,
+      //  };
+       console.log(res.data);
+      // dispatch(addUser());
     } catch (error) {
       console.log('Failed to login:', error);
     }
   };
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const {setIsLogin} = useContext(ContextProvider);
-
-  // useEffect(async () => {
-  //   const user = await fetchAPI();
-  //   console.log(user);
-  // }, []);
 
   return (
     <View style={styles.card}>
