@@ -1,14 +1,15 @@
-import { StyleSheet, SafeAreaView, StatusBar } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {StyleSheet, SafeAreaView, StatusBar} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import LoginRegister from './src/navigations/stack/LoginRegister';
-import SpaceId from './src/components/SpaceId';
+import SpaceId from './src/navigations/stack/SpaceId';
 import ContextProvider from './src/components/Context';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { useState, useEffect } from 'react';
+import {createDrawerNavigator} from '@react-navigation/drawer';
+import {useState, useEffect} from 'react';
 import Orientation from 'react-native-orientation-locker';
 import DrawerApp from './src/navigations/DrawerApp';
 import SplashScreen from './src/components/SplashScreen';
+import StartScreenStack from './src/navigations/StartScreenStack';
 export default function App() {
   const Drawer = createDrawerNavigator();
   const Stack = createNativeStackNavigator();
@@ -48,14 +49,10 @@ export default function App() {
             <SplashScreen />
           ) : (
             <Stack.Navigator>
-              <Stack.Screen
-                name="Login"
-                component={LoginRegister}
-                options={{headerShown: false}}
-              />
+             
               <Stack.Screen
                 name="SpaceId"
-                component={SpaceId}
+                component={StartScreenStack}
                 options={{headerShown: false}}
               />
               <Stack.Screen

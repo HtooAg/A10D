@@ -6,7 +6,7 @@ import {
   EyeOff,
   Check,
 } from 'lucide-react-native';
-import React, {FC, useContext, useState} from 'react';
+import React, {FC, useContext, useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -19,38 +19,98 @@ import {
 import Header from '../Header';
 import {NavigationType} from '../../type_hint/navType';
 import ContextProvider from '../../components/Context';
+import {Controller, useForm} from 'react-hook-form';
+import {postRequest} from '../../api/Api';
 
-const Login: FC<{navigation: any}> = ({navigation}) => {
+const Login: FC<{navigation: any}> = ({navigation, spaceId}) => {
+  const {
+    control,
+    handleSubmit,
+    formState: {errors},
+    reset,
+    setValue,
+  } = useForm({
+    defaultValues: {
+      space_id: spaceId,
+      email: '',
+      password: '',
+    },
+  });
+
+  const onSubmit = async loginData => {
+    try {
+      const fetchAPI = await postRequest(
+        `/api/v1/users/user-login?`,
+        loginData,
+      );
+      console.log(fetchAPI.headers);
+    } catch (error) {
+      console.log('Failed to login:', error);
+    }
+  };
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const {setIsLogin} = useContext(ContextProvider);
+
+  // useEffect(async () => {
+  //   const user = await fetchAPI();
+  //   console.log(user);
+  // }, []);
+
   return (
     <View style={styles.card}>
       <View style={{marginTop: 20}}>
         <View style={styles.inputContainer}>
           <Mail size={20} color="#000" style={styles.inputIcon} />
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            placeholderTextColor="#000"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({field: {onChange, onBlur, value}}) => (
+              <TextInput
+                style={styles.input}
+                placeholder="Email"
+                placeholderTextColor="#000"
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                keyboardType="email-address"
+              />
+            )}
+            name="email"
           />
         </View>
+        {errors.email && (
+          <Text style={{color: 'red', paddingHorizontal: 10}}>
+            Email is required .
+          </Text>
+        )}
 
         <View style={styles.inputContainer}>
           <LockIcon size={20} color="#000" style={styles.inputIcon} />
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            placeholderTextColor="#000"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry={!showPassword}
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({field: {onChange, onBlur, value}}) => (
+              <TextInput
+                style={styles.input}
+                placeholder="Password"
+                placeholderTextColor="#000"
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                secureTextEntry={!showPassword}
+              />
+            )}
+            name="password"
           />
+
           <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
             {showPassword ? (
               <Eye size={20} color="#000" />
@@ -59,7 +119,11 @@ const Login: FC<{navigation: any}> = ({navigation}) => {
             )}
           </TouchableOpacity>
         </View>
-
+        {errors.password && (
+          <Text style={{color: 'red', paddingHorizontal: 10}}>
+            Password is required .
+          </Text>
+        )}
         <View style={styles.rememberContainer}>
           <TouchableOpacity
             style={styles.checkbox}
@@ -71,7 +135,7 @@ const Login: FC<{navigation: any}> = ({navigation}) => {
 
         <TouchableOpacity
           style={styles.loginButton}
-          onPress={() => navigation.navigate('DrawerApp')}>
+          onPress={handleSubmit(onSubmit)}>
           <Text style={styles.loginButtonText}>Login</Text>
         </TouchableOpacity>
 

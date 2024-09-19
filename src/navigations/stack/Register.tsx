@@ -5,74 +5,152 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import {NavigationType} from '../../type_hint/navType';
-import {FC, useState} from 'react';
-import Header from '../Header';
+import { NavigationType } from '../../type_hint/navType';
+import { FC, useState } from 'react';
 import {
-  ArrowLeft,
   Eye,
   LockIcon,
   Mail,
-  EyeOff,
-  Check,
-  User,
+  EyeOff, User,
   Fingerprint,
-  Phone,
+  Phone
 } from 'lucide-react-native';
+import { Controller, useForm } from 'react-hook-form';
+import { postRequest } from '../../api/Api';
 
-export default function Register() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
+type RegisterData = {
+  name: string;
+  email: string;
+  password: string;
+  space_id: number;
+  staffid: string;
+  phoneNo: string;
+};
+
+const Register: FC<NavigationType> = ({navigation, spaceId}) => {
+  const {
+    control,
+    handleSubmit,
+    formState: {errors},
+  } = useForm({
+    defaultValues: {
+      name: '',
+      email: '',
+      password: '',
+      space_id: spaceId,
+      staffid: '',
+      phoneNo: '',
+    },
+  });
+
   const [showPassword, setShowPassword] = useState(false);
-  const [phone, setPhone] = useState('');
-  const [id, setID] = useState('');
+
+  const onSubmit = async (registerData: RegisterData) => {
+    try {
+      const response = await postRequest(
+        '/api/v1/users/register',
+        registerData,
+      );
+      console.log('Response: ', response.request);
+
+      // navigation.navigate('Home');
+    } catch (error) {
+      console.error('Error during registration:', error);
+    }
+  };
+
   return (
     <View style={styles.card}>
       <View style={{marginTop: 20}}>
+        {/* Name Input */}
         <View style={styles.inputContainer}>
           <User size={20} color="#000" style={styles.inputIcon} />
-          <TextInput
-            style={styles.input}
-            placeholder="Name"
-            placeholderTextColor="#000"
-            value={name}
-            onChangeText={setName}
+          <Controller
+            control={control}
+            rules={{required: true}}
+            render={({field: {onChange, onBlur, value}}) => (
+              <TextInput
+                style={styles.input}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                value={value}
+                placeholder="Name"
+                placeholderTextColor="#000"
+              />
+            )}
+            name="name"
           />
         </View>
+        {errors?.name && (
+          <Text style={{color: 'red', fontSize: 10}}>Name is required.</Text>
+        )}
+
+        {/* Phone Input */}
         <View style={styles.inputContainer}>
           <Phone size={20} color="#000" style={styles.inputIcon} />
-          <TextInput
-            style={styles.input}
-            placeholder="Phone"
-            placeholderTextColor="#000"
-            value={phone}
-            onChangeText={setPhone}
-            keyboardType="phone-pad"
+          <Controller
+            control={control}
+            rules={{required: true}}
+            render={({field: {onChange, onBlur, value}}) => (
+              <TextInput
+                style={styles.input}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                value={value}
+                placeholder="Phone"
+                placeholderTextColor="#000"
+                keyboardType="phone-pad"
+              />
+            )}
+            name="phoneNo"
           />
         </View>
+        {errors?.phoneNo && (
+          <Text style={{color: 'red', fontSize: 10}}>Phone is required.</Text>
+        )}
+
+        {/* Email Input */}
         <View style={styles.inputContainer}>
           <Mail size={20} color="#000" style={styles.inputIcon} />
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            placeholderTextColor="#000"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
+          <Controller
+            control={control}
+            rules={{required: true}}
+            render={({field: {onChange, onBlur, value}}) => (
+              <TextInput
+                style={styles.input}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                value={value}
+                placeholder="Email"
+                placeholderTextColor="#000"
+                keyboardType="email-address"
+              />
+            )}
+            name="email"
           />
         </View>
+        {errors?.email && (
+          <Text style={{color: 'red', fontSize: 10}}>Email is required.</Text>
+        )}
 
+        {/* Password Input */}
         <View style={styles.inputContainer}>
           <LockIcon size={20} color="#000" style={styles.inputIcon} />
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            placeholderTextColor="#000"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry={!showPassword}
+          <Controller
+            control={control}
+            rules={{required: true}}
+            render={({field: {onChange, onBlur, value}}) => (
+              <TextInput
+                style={styles.input}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                value={value}
+                placeholder="Password"
+                placeholderTextColor="#000"
+                secureTextEntry={!showPassword}
+              />
+            )}
+            name="password"
           />
           <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
             {showPassword ? (
@@ -82,26 +160,48 @@ export default function Register() {
             )}
           </TouchableOpacity>
         </View>
+        {errors?.password && (
+          <Text style={{color: 'red', fontSize: 10}}>
+            Password is required.
+          </Text>
+        )}
 
+        {/* Staff ID Input */}
         <View style={styles.inputContainer}>
           <Fingerprint size={20} color="#000" style={styles.inputIcon} />
-          <TextInput
-            style={styles.input}
-            placeholder="StaffID"
-            placeholderTextColor="#000"
-            value={id}
-            onChangeText={setID}
-            keyboardType="phone-pad"
+          <Controller
+            control={control}
+            rules={{required: true}}
+            render={({field: {onChange, onBlur, value}}) => (
+              <TextInput
+                style={styles.input}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                value={value}
+                placeholder="Staff ID"
+                placeholderTextColor="#000"
+                keyboardType="phone-pad"
+              />
+            )}
+            name="staffid"
           />
         </View>
+        {errors?.staffid && (
+          <Text style={{color: 'red', fontSize: 10}}>
+            Staff ID is required.
+          </Text>
+        )}
 
-        <TouchableOpacity style={styles.loginButton}>
+        {/* Submit Button */}
+        <TouchableOpacity
+          style={styles.loginButton}
+          onPress={handleSubmit(onSubmit)}>
           <Text style={styles.loginButtonText}>Register</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   card: {
@@ -114,15 +214,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: '20%',
   },
-
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#f3f4f6',
     borderRadius: 12,
     paddingHorizontal: 12,
-    marginVertical: 20,
-    marginBottom: 20,
+    marginTop: 20,
   },
   inputIcon: {
     marginRight: 12,
@@ -138,7 +236,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
-    marginBottom: 16,
+    marginVertical: 16,
   },
   loginButtonText: {
     color: 'white',
@@ -146,3 +244,5 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 });
+
+export default Register;
