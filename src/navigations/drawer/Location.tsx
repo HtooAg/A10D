@@ -9,7 +9,7 @@ import {
 } from 'lucide-react-native';
 import React, {Component, FC} from 'react';
 import {Text, StyleSheet, View, TouchableOpacity, Alert} from 'react-native';
-import {NavigationType} from '../type_hint/navType';
+import { NavigationType } from '../../type_hint/navType';
 
 const Location: FC<NavigationType> = ({navigation}) => {
   return (

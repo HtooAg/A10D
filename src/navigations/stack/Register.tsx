@@ -13,6 +13,10 @@ import {
   Fingerprint,
   Phone
 } from 'lucide-react-native';
+import { NavigationType } from '../../type_hint/navType';
+import { FC, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { postRequest } from '../../api/Api';
 
 
 type RegisterData = {
@@ -41,15 +45,18 @@ const Register: FC<NavigationType> = ({navigation, spaceId}) => {
     },
   });
 
+  console.log(spaceId);
+
   const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = async (registerData: RegisterData) => {
+    console.log(registerData);
     try {
       const response = await postRequest(
         '/api/v1/users/register',
         registerData,
       );
-
+      console.log(response)
 
       // navigation.navigate('Home');
     } catch (error) {

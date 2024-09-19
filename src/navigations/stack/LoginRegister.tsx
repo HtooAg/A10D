@@ -25,6 +25,7 @@ const LoginRegister: FC<NavigationType> = ({navigation, route}) => {
   const screenWidth = Dimensions.get('window').width; // Get screen width
   const [isToggle, setIsToggle] = useState(true);
 
+  console.log(spaceId)
   return (
     <SafeAreaView style={{flex: 1}}>
       <KeyboardAvoidingView

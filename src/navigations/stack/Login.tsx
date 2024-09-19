@@ -22,10 +22,11 @@ import ContextProvider from '../../components/Context';
 import {Controller, useForm} from 'react-hook-form';
 import {postRequest} from '../../api/Api';
 import {createSlice} from '@reduxjs/toolkit';
-import { useDispatch, useSelector } from 'react-redux';
-import { addUser } from '../../features/login/loginSlice';
+import {useDispatch, useSelector} from 'react-redux';
+import {addUser} from '../../features/login/loginSlice';
 
 const Login: FC<{navigation: any}> = ({navigation, spaceId}) => {
+  console.log(spaceId);
   const {
     control,
     handleSubmit,
@@ -41,23 +42,16 @@ const Login: FC<{navigation: any}> = ({navigation, spaceId}) => {
   });
 
   const dispatch = useDispatch();
-  const {login} = useSelector(state => state.login);
-  console.log(login)
+  const login = useSelector(state => state.login.loginUser);
+  console.log(login);
 
   const onSubmit = async loginData => {
     try {
-
-      const fetchAPI = await fetch(
-        `/api/v1/users/user-login?space-id=${loginData.space_id}&email=${loginData.email}&password=${loginData.password}`
+      const fetchAPI = await postRequest(
+        `/api/v1/users/user-login?`,
+        loginData,
       );
-      const res = await fetchAPI.json();
-      //  const serializableData = {
-      //    data: fetchAPI.data.data,
-      //    message: fetchAPI.data.message,
-      //    status: fetchAPI.data.status,
-      //  };
-       console.log(res.data);
-      // dispatch(addUser());
+      dispatch(addUser(fetchAPI.config.data));
     } catch (error) {
       console.log('Failed to login:', error);
     }

@@ -23,18 +23,17 @@ const SpaceId: FC<NavigationType> = ({navigation}) => {
     reset,
     setValue,
   } = useForm({
-    defaultValues: {
+    values: {
       spaceName: '',
     },
   });
 
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     reset({spaceName: 'Space name'});
-  //   }, [reset]),
-  // );
+  const emojisWithIcons = [{title: 7}];
 
 
+  const onSubmit = data => {
+    navigation.navigate('Login', {spaceId: data.spaceName});
+  };
 
   return (
     <View style={styles.container}>
@@ -64,7 +63,7 @@ const SpaceId: FC<NavigationType> = ({navigation}) => {
           control={control}
           rules={{
             validate: value => {
-               if (!value) {
+              if (!value) {
                 return 'Space name is required';
               }
               return true;

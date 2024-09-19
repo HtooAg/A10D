@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {combineReducers, configureStore} from '@reduxjs/toolkit';
 import {persistReducer, persistStore} from 'redux-persist';
-
+import loginSlice from '../features/login/loginSlice';
 
 // persistConfig setup
 const persistConfig = {
@@ -12,7 +12,7 @@ const persistConfig = {
 
 // Combine your reducers (replace with actual reducers)
 const rootReducer = combineReducers({
-  login: null, // Example login slice reducer
+  login: loginSlice, // Example login slice reducer
 });
 
 // Persist the rootReducer
