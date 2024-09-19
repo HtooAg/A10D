@@ -2,10 +2,17 @@ import axios from 'axios';
 
 const axiosInstance = axios.create({
   baseURL: 'http://65.18.112.78:9090',
+<<<<<<< HEAD
   // headers: {
   //   Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxZGQ3ZDVlNzFmM2MxNjAyODAwNGJkYzJlZDllZThjZiIsIm5iZiI6MTcyMjkyMTU4MS42NjE1Niwic3ViIjoiNjZiMWFjNjZjZWVmZWZkZjAxMGNmNDExIiwic2NvcGVzIjpbImFwaV9yZWFkIl0sInZlcnNpb24iOjF9.O8lO7ht0jcqyeKfaOPMnc3C3IL1jZXaknyIJOzfVc_M`,
   //   'Content-Type': 'application/json',
   // },
+=======
+  headers: {
+    Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxZGQ3ZDVlNzFmM2MxNjAyODAwNGJkYzJlZDllZThjZiIsIm5iZiI6MTcyMjkyMTU4MS42NjE1Niwic3ViIjoiNjZiMWFjNjZjZWVmZWZkZjAxMGNmNDExIiwic2NvcGVzIjpbImFwaV9yZWFkIl0sInZlcnNpb24iOjF9.O8lO7ht0jcqyeKfaOPMnc3C3IL1jZXaknyIJOzfVc_M`,
+    'Content-Type': 'application/json',
+  },
+>>>>>>> origin/yair-yint
 });
 
 export const getRequest = async URL => await axiosInstance.get(URL);

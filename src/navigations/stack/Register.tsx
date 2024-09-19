@@ -5,8 +5,6 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import { NavigationType } from '../../type_hint/navType';
-import { FC, useState } from 'react';
 import {
   Eye,
   LockIcon,
@@ -15,8 +13,7 @@ import {
   Fingerprint,
   Phone
 } from 'lucide-react-native';
-import { Controller, useForm } from 'react-hook-form';
-import { postRequest } from '../../api/Api';
+
 
 type RegisterData = {
   name: string;
@@ -28,6 +25,7 @@ type RegisterData = {
 };
 
 const Register: FC<NavigationType> = ({navigation, spaceId}) => {
+
   const {
     control,
     handleSubmit,
@@ -51,7 +49,7 @@ const Register: FC<NavigationType> = ({navigation, spaceId}) => {
         '/api/v1/users/register',
         registerData,
       );
-      console.log('Response: ', response.request);
+
 
       // navigation.navigate('Home');
     } catch (error) {

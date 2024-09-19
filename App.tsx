@@ -49,7 +49,6 @@ export default function App() {
             <SplashScreen />
           ) : (
             <Stack.Navigator>
-             
               <Stack.Screen
                 name="SpaceId"
                 component={StartScreenStack}

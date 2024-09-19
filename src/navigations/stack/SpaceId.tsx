@@ -34,11 +34,7 @@ const SpaceId: FC<NavigationType> = ({navigation}) => {
   //   }, [reset]),
   // );
 
-  const onSubmit = data => {
-    navigation.navigate('Login', {spaceId: data.spaceName});
-  };
 
-  const emojisWithIcons = [{title: 7}];
 
   return (
     <View style={styles.container}>
@@ -68,7 +64,7 @@ const SpaceId: FC<NavigationType> = ({navigation}) => {
           control={control}
           rules={{
             validate: value => {
-              if (!value) {
+               if (!value) {
                 return 'Space name is required';
               }
               return true;
