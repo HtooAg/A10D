@@ -5,21 +5,19 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import {NavigationType} from '../../type_hint/navType';
-import {FC, useState} from 'react';
 import {
-  ArrowLeft,
   Eye,
   LockIcon,
   Mail,
-  EyeOff,
-  Check,
-  User,
+  EyeOff, User,
   Fingerprint,
-  Phone,
+  Phone
 } from 'lucide-react-native';
-import {Controller, useForm} from 'react-hook-form';
-import {postRequest} from '../../api/Api';
+import { Controller, useForm } from 'react-hook-form';
+import { NavigationType } from '../../type_hint/navType';
+import { FC, useState } from 'react';
+import { postRequest } from '../../api/Api';
+
 
 type RegisterData = {
   name: string;
@@ -55,7 +53,8 @@ const Register: FC<NavigationType> = ({navigation, spaceId}) => {
         '/api/v1/users/register',
         registerData,
       );
-      console.log('Response: ', response);
+
+      console.log(response)
 
       // navigation.navigate('Home');
     } catch (error) {
@@ -66,7 +65,6 @@ const Register: FC<NavigationType> = ({navigation, spaceId}) => {
   return (
     <View style={styles.card}>
       <View style={{marginTop: 20}}>
-        {/* Name Input */}
         <View style={styles.inputContainer}>
           <User size={20} color="#000" style={styles.inputIcon} />
           <Controller
@@ -89,7 +87,6 @@ const Register: FC<NavigationType> = ({navigation, spaceId}) => {
           <Text style={{color: 'red', fontSize: 10}}>Name is required.</Text>
         )}
 
-        {/* Phone Input */}
         <View style={styles.inputContainer}>
           <Phone size={20} color="#000" style={styles.inputIcon} />
           <Controller
@@ -113,7 +110,6 @@ const Register: FC<NavigationType> = ({navigation, spaceId}) => {
           <Text style={{color: 'red', fontSize: 10}}>Phone is required.</Text>
         )}
 
-        {/* Email Input */}
         <View style={styles.inputContainer}>
           <Mail size={20} color="#000" style={styles.inputIcon} />
           <Controller
@@ -137,7 +133,6 @@ const Register: FC<NavigationType> = ({navigation, spaceId}) => {
           <Text style={{color: 'red', fontSize: 10}}>Email is required.</Text>
         )}
 
-        {/* Password Input */}
         <View style={styles.inputContainer}>
           <LockIcon size={20} color="#000" style={styles.inputIcon} />
           <Controller
@@ -170,7 +165,6 @@ const Register: FC<NavigationType> = ({navigation, spaceId}) => {
           </Text>
         )}
 
-        {/* Staff ID Input */}
         <View style={styles.inputContainer}>
           <Fingerprint size={20} color="#000" style={styles.inputIcon} />
           <Controller
@@ -196,7 +190,6 @@ const Register: FC<NavigationType> = ({navigation, spaceId}) => {
           </Text>
         )}
 
-        {/* Submit Button */}
         <TouchableOpacity
           style={styles.loginButton}
           onPress={handleSubmit(onSubmit)}>

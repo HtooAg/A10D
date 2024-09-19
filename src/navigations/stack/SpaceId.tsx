@@ -28,6 +28,8 @@ const SpaceId: FC<NavigationType> = ({navigation}) => {
     },
   });
 
+  const emojisWithIcons = [{title: 2}];
+
   // useFocusEffect(
   //   React.useCallback(() => {
   //     reset({spaceName: 'Space name'});
@@ -35,14 +37,9 @@ const SpaceId: FC<NavigationType> = ({navigation}) => {
   // );
 
   const onSubmit = (data) => {
-    
     navigation.navigate('Login', {spaceId: data.spaceName});
-  };
+  }
 
-  const emojisWithIcons = [
-    {title: 2},
-    
-  ];
 
   return (
     <View style={styles.container}>

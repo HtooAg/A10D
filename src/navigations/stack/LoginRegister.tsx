@@ -92,7 +92,7 @@ const LoginRegister: FC<NavigationType> = ({navigation, route}) => {
                 </TouchableOpacity>
               </View>
               {isToggle ? (
-                <Login navigation={navigation} />
+                <Login navigation={navigation} spaceId={spaceId} />
               ) : (
                 <Register spaceId={spaceId} />
               )}
