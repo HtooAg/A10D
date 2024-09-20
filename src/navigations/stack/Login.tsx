@@ -13,11 +13,12 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  FlatList,
 } from 'react-native';
 import {Controller, useForm} from 'react-hook-form';
 import {postRequest} from '../../api/Api';
 import {useDispatch, useSelector} from 'react-redux';
-import {addUser} from '../../features/login/loginSlice';
+import {addRegisterUser} from '../../features/register/RegisterSlice';
 
 const Login: FC<{navigation: any; spaceId: string}> = ({
   navigation,
@@ -37,9 +38,14 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
   });
 
   const dispatch = useDispatch();
-  const {loginUser} = useSelector(state => state.login.login);
+  const loginUser = useSelector(state => state.login.loginUser);
+  const RegisterUser = useSelector(state => state.register.registerUser);
 
-  console.log(loginUser);
+  const userEmail = RegisterUser?.email;
+  const userPassword = RegisterUser?.password;
+  console.log('Login: ', loginUser);
+  console.log('Register: ', RegisterUser);
+  console.log('Register: ', userEmail);
 
   const onSubmit = async loginData => {
     try {
@@ -48,16 +54,16 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
         loginData,
       );
       // console.log(fetchAPI.config);
-      dispatch(addUser(fetchAPI.config.data));
-      if(fetchAPI.status === 200){
-        navigation.navigate('Home', {
-          screen: 'HomeStack',
-          params: {
-            spaceId: spaceId,
-            userId: fetchAPI.config.data.id,
-          },
-        });
-      }
+      dispatch(addRegisterUser(fetchAPI.config.data));
+      // if(loginData.email && loginData.password === RegisterUser.email && RegisterUser.password){
+      //   navigation.navigate('Home', {
+      //     screen: 'HomeStack',
+      //     params: {
+      //       spaceId: spaceId,
+      //       userId: fetchAPI.config.data.id,
+      //     },
+      //   });
+      // }
       reset({
         email: '',
         password: '',
@@ -92,13 +98,22 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
             )}
             name="email"
           />
+          {/* {RegisterUser?.map(user => {
+            console.log('User Email: ', user.email);
+            console.log('User Password: ', user.password);
+            return (
+              <View key={user.id}>
+                <Text>{user.email}</Text>
+                <Text>{user.password}</Text>
+              </View>
+            );
+          })} */}
         </View>
         {errors.email && (
           <Text style={{color: 'red', paddingHorizontal: 10}}>
             Email is required.
           </Text>
         )}
-
         <View style={styles.inputContainer}>
           <LockIcon size={20} color="#000" style={styles.inputIcon} />
           <Controller

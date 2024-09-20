@@ -27,6 +27,8 @@ import {
   AlertNotificationRoot,
   Toast,
 } from 'react-native-alert-notification';
+import { useDispatch, useSelector } from 'react-redux';
+import { addRegisterUser } from '../../features/register/RegisterSlice';
 
 type RegisterData = {
   name: string;
@@ -57,7 +59,10 @@ const Register: FC<NavigationType> = ({navigation, spaceId}) => {
   console.log(spaceId);
 
   const [showPassword, setShowPassword] = useState(false);
+   const dispatch = useDispatch();
+   const RegisterUser = useSelector(state => state.register.registerUser);
 
+console.log(RegisterUser);
   const onSubmit = async (registerData: RegisterData) => {
     console.log(registerData);
     try {
@@ -66,6 +71,12 @@ const Register: FC<NavigationType> = ({navigation, spaceId}) => {
         registerData,
       );
 
+
+
+
+
+      dispatch(addRegisterUser(response.config.data));
+      console.log(response);
 
 
       if (response.data.status === 'fail') {

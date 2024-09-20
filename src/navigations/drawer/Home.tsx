@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     elevation: 5,
     position: 'absolute',
-    top: '20%',
+    top: '30%',
     transform: [{translateY: -100}],
 
   },
