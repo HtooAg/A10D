@@ -51,17 +51,17 @@ const Login: FC<{navigation: any}> = ({navigation, spaceId}) => {
         loginData,
       );
       
-      // console.log(fetchAPI.config);
+      console.log(fetchAPI);
       dispatch(addUser(fetchAPI.config.data));
-      if(fetchAPI.status === 200){
-        navigation.navigate('Home', {
-          screen: 'HomeStack',
-          params: {
-            spaceId: spaceId,
-            userId: fetchAPI.config.data.id,
-          },
-        });
-      }
+      // if(fetchAPI.status === 200){
+      //   navigation.navigate('Home', {
+      //     screen: 'HomeStack',
+      //     params: {
+      //       spaceId: spaceId,
+      //       userId: fetchAPI.config.data.id,
+      //     },
+      //   });
+      // }
       reset({
         email: '',
         password: '',
