@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavigationType } from '../type_hint/navType';
-import { Smartphone } from 'lucide-react-native';
+import { Smartphone, User2 } from 'lucide-react-native';
 import { useState } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -19,6 +19,8 @@ import {
 import LocationStack from './LocationStack';
 import LogoutDrawer from './drawer/LogoutDrawer';
 import AttendanceStack from './drawer/AttendanceStack';
+import { Text, View } from 'react-native';
+import User from './drawer/User';
 const DrawerApp: React.FC<NavigationType> = ({navigation}) => {
   const Drawer = createDrawerNavigator();
   const Stack = createNativeStackNavigator();
@@ -37,6 +39,33 @@ const DrawerApp: React.FC<NavigationType> = ({navigation}) => {
           // opacity: 0.5,
         },
       }}>
+      <Drawer.Screen
+        name="User"
+        component={User}
+        options={{
+          headerShown: false,
+          drawerInactiveTintColor: '#031f0a',
+          drawerActiveTintColor: '#2563eb',
+          drawerIcon: ({color, size}) => (
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-evenly',
+                borderBottomWidth: 1,
+                width: '100%',
+                paddingBottom: 10,
+              
+              }}>
+              <User2 color={color} size={45} strokeWidth={1.5} />
+              <Text style={{color: color, fontWeight: '500'}}>
+                Htoo Aung Wai
+              </Text>
+              <Text style={{opacity: 0}}>User</Text>
+            </View>
+          ),
+        }}
+      />
       <Drawer.Screen
         name="Home"
         component={Home}

@@ -4,6 +4,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
+  Alert,
+  Button,
 } from 'react-native';
 import {
   Eye,
@@ -13,12 +15,18 @@ import {
   User,
   Fingerprint,
   Phone,
+  AlertTriangle
 } from 'lucide-react-native';
-
-import {Controller, useForm} from 'react-hook-form';
-import {NavigationType} from '../../type_hint/navType';
-import {FC, useState} from 'react';
-import {postRequest} from '../../api/Api';
+import { Controller, useForm } from 'react-hook-form';
+import { NavigationType } from '../../type_hint/navType';
+import { FC, useState } from 'react';
+import { postRequest } from '../../api/Api';
+import {
+  ALERT_TYPE,
+  Dialog,
+  AlertNotificationRoot,
+  Toast,
+} from 'react-native-alert-notification';
 
 type RegisterData = {
   name: string;
@@ -34,6 +42,7 @@ const Register: FC<NavigationType> = ({navigation, spaceId}) => {
     control,
     handleSubmit,
     formState: {errors},
+    reset
   } = useForm({
     defaultValues: {
       name: '',
@@ -57,8 +66,29 @@ const Register: FC<NavigationType> = ({navigation, spaceId}) => {
         registerData,
       );
 
-      console.log(response);
 
+
+      if (response.data.status === 'fail') {
+        Toast.show({
+          type: ALERT_TYPE.WARNING,
+          title: 'Warning',
+          textBody: response.data.message,
+        });
+      } else {
+        Toast.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: 'Success',
+          textBody: 'Register successful!',
+        });
+      }
+    reset({
+      name: '',
+      email: '',
+      password: '',
+      space_id: spaceId,
+      staffid: '',
+      phoneNo: '',
+    });
       // navigation.navigate('Home');
     } catch (error) {
       console.error('Error during registration:', error);
@@ -94,7 +124,20 @@ const Register: FC<NavigationType> = ({navigation, spaceId}) => {
           <Phone size={20} color="#000" style={styles.inputIcon} />
           <Controller
             control={control}
-            rules={{required: true}}
+            rules={{
+              validate: value => {
+                if (!value) {
+                  return 'Phone number is required';
+                }
+                if (value.length !== 11) {
+                  // Ensures exactly 11 digits
+                  // !/^\d{11}$/.test(value);
+                  return 'Phone number must be exactly 11 digits';
+                }
+                return true;
+              },
+              required: 'Phone number is required',
+            }}
             render={({field: {onChange, onBlur, value}}) => (
               <TextInput
                 style={styles.input}
@@ -110,7 +153,9 @@ const Register: FC<NavigationType> = ({navigation, spaceId}) => {
           />
         </View>
         {errors?.phoneNo && (
-          <Text style={{color: 'red', fontSize: 10}}>Phone is required.</Text>
+          <Text style={{color: 'red', fontSize: 10}}>
+            {errors.phoneNo.message}
+          </Text>
         )}
 
         <View style={styles.inputContainer}>

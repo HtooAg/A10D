@@ -26,6 +26,7 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
   const {
     control,
     handleSubmit,
+    reset,
     formState: {errors},
   } = useForm({
     defaultValues: {
@@ -46,13 +47,6 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
         '/api/v1/users/user-login?',
         loginData,
       );
-
-      //  const serializableData = {
-      //    data: fetchAPI.config.data,
-         
-      //    message: fetchAPI.data.message,
-      //    status: fetchAPI.status,
-      //  };
       // console.log(fetchAPI.config);
       dispatch(addUser(fetchAPI.config.data));
       if(fetchAPI.status === 200){
@@ -64,6 +58,11 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
           },
         });
       }
+      reset({
+        email: '',
+        password: '',
+        space_id: spaceId,
+      });
     } catch (error) {
       console.log('Failed to login:', error);
     }
