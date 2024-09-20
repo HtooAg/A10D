@@ -50,12 +50,7 @@ const Login: FC<{navigation: any}> = ({navigation, spaceId}) => {
         `/api/v1/users/user-login?`,
         loginData,
       );
-      //  const serializableData = {
-      //    data: fetchAPI.config.data,
-         
-      //    message: fetchAPI.data.message,
-      //    status: fetchAPI.status,
-      //  };
+      
       // console.log(fetchAPI.config);
       dispatch(addUser(fetchAPI.config.data));
       if(fetchAPI.status === 200){
@@ -67,6 +62,11 @@ const Login: FC<{navigation: any}> = ({navigation, spaceId}) => {
           },
         });
       }
+      reset({
+        email: '',
+        password: '',
+        space_id: spaceId,
+      });
     } catch (error) {
       console.log('Failed to login:', error);
     }

@@ -1,5 +1,5 @@
 import {StyleSheet, SafeAreaView, StatusBar} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
+import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import LoginRegister from './src/navigations/stack/LoginRegister';
 import SpaceId from './src/navigations/stack/SpaceId';
@@ -13,6 +13,7 @@ import StartScreenStack from './src/navigations/StartScreenStack';
 import {Provider} from 'react-redux';
 import { store, persistor } from './src/store/Store';
 import { PersistGate } from 'redux-persist/es/integration/react';
+import { AlertNotificationRoot } from 'react-native-alert-notification';
 
 
 export default function App() {
@@ -38,34 +39,36 @@ export default function App() {
       <StatusBar backgroundColor="#0032fc" />
       <Provider store={store}>
         <PersistGate persistor={persistor}>
+            <AlertNotificationRoot>
 
-            <NavigationContainer>
-              <ContextProvider.Provider
-                value={{
-                  isLogin,
-                  setIsLogin,
-                  changeDevice,
-                  setChangeDevice,
-                  changeModal,
-                  setChangeModal,
-                  emailModalVisible,
-                  setEmailModalVisible,
-                  callModalVisible,
-                  setCallModalVisible,
-                }}>
-                {showSplash ? (
-                  <SplashScreen />
-                ) : (
-                  <Stack.Navigator>
-                    <Stack.Screen
-                      name="SpaceId"
-                      component={StartScreenStack}
-                      options={{headerShown: false}}
-                    />
-                  </Stack.Navigator>
-                )}
-              </ContextProvider.Provider>
-            </NavigationContainer>
+              <NavigationContainer theme={DefaultTheme}>
+                <ContextProvider.Provider
+                  value={{
+                    isLogin,
+                    setIsLogin,
+                    changeDevice,
+                    setChangeDevice,
+                    changeModal,
+                    setChangeModal,
+                    emailModalVisible,
+                    setEmailModalVisible,
+                    callModalVisible,
+                    setCallModalVisible,
+                  }}>
+                  {showSplash ? (
+                    <SplashScreen />
+                  ) : (
+                    <Stack.Navigator>
+                      <Stack.Screen
+                        name="SpaceId"
+                        component={StartScreenStack}
+                        options={{headerShown: false}}
+                      />
+                    </Stack.Navigator>
+                  )}
+                </ContextProvider.Provider>
+              </NavigationContainer>
+            </AlertNotificationRoot>
         </PersistGate>
       </Provider>
     </SafeAreaView>
