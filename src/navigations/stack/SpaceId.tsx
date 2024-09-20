@@ -28,12 +28,14 @@ const SpaceId: FC<NavigationType> = ({navigation}) => {
     },
   });
 
+
   const emojisWithIcons = [{title: 7}];
 
 
-  const onSubmit = data => {
+  const onSubmit = (data) => {
     navigation.navigate('Login', {spaceId: data.spaceName});
-  };
+  }
+
 
   return (
     <View style={styles.container}>

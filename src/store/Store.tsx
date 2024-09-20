@@ -32,7 +32,7 @@ export const store = configureStore({
           'persist/PURGE',
           'persist/REGISTER',
         ],
-        ignoredPaths: ['some.path.to.ignore'], // Adjust paths if needed
+        ignoredPaths: ['login.loginUser'], // Ignore paths where non-serializable data is stored
       },
     }),
 });

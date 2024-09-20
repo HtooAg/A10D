@@ -6,33 +6,27 @@ import {
   EyeOff,
   Check,
 } from 'lucide-react-native';
-import React, {FC, useContext, useState, useEffect} from 'react';
+import React, {FC, useState} from 'react';
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  SafeAreaView,
-  KeyboardAvoidingView,
 } from 'react-native';
-import Header from '../Header';
-import {NavigationType} from '../../type_hint/navType';
-import ContextProvider from '../../components/Context';
 import {Controller, useForm} from 'react-hook-form';
 import {postRequest} from '../../api/Api';
-import {createSlice} from '@reduxjs/toolkit';
 import {useDispatch, useSelector} from 'react-redux';
 import {addUser} from '../../features/login/loginSlice';
 
-const Login: FC<{navigation: any}> = ({navigation, spaceId}) => {
-  console.log(spaceId);
+const Login: FC<{navigation: any; spaceId: string}> = ({
+  navigation,
+  spaceId,
+}) => {
   const {
     control,
     handleSubmit,
     formState: {errors},
-    reset,
-    setValue,
   } = useForm({
     defaultValues: {
       space_id: spaceId,
@@ -42,16 +36,19 @@ const Login: FC<{navigation: any}> = ({navigation, spaceId}) => {
   });
 
   const dispatch = useDispatch();
-  const login = useSelector(state => state.login.loginUser);
-  console.log(login);
+  const {loginUser} = useSelector(state => state.login.login);
+
+  console.log(loginUser);
 
   const onSubmit = async loginData => {
     try {
       const fetchAPI = await postRequest(
-        `/api/v1/users/user-login?`,
+        '/api/v1/users/user-login?',
         loginData,
       );
-      dispatch(addUser(fetchAPI.config.data));
+      console.log(fetchAPI.data); // Log the API response data
+
+      dispatch(addUser(fetchAPI.data)); // Dispatch the response data
     } catch (error) {
       console.log('Failed to login:', error);
     }
@@ -67,9 +64,7 @@ const Login: FC<{navigation: any}> = ({navigation, spaceId}) => {
           <Mail size={20} color="#000" style={styles.inputIcon} />
           <Controller
             control={control}
-            rules={{
-              required: true,
-            }}
+            rules={{required: true}}
             render={({field: {onChange, onBlur, value}}) => (
               <TextInput
                 style={styles.input}
@@ -86,7 +81,7 @@ const Login: FC<{navigation: any}> = ({navigation, spaceId}) => {
         </View>
         {errors.email && (
           <Text style={{color: 'red', paddingHorizontal: 10}}>
-            Email is required .
+            Email is required.
           </Text>
         )}
 
@@ -94,9 +89,7 @@ const Login: FC<{navigation: any}> = ({navigation, spaceId}) => {
           <LockIcon size={20} color="#000" style={styles.inputIcon} />
           <Controller
             control={control}
-            rules={{
-              required: true,
-            }}
+            rules={{required: true}}
             render={({field: {onChange, onBlur, value}}) => (
               <TextInput
                 style={styles.input}
@@ -110,7 +103,6 @@ const Login: FC<{navigation: any}> = ({navigation, spaceId}) => {
             )}
             name="password"
           />
-
           <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
             {showPassword ? (
               <Eye size={20} color="#000" />
@@ -121,9 +113,10 @@ const Login: FC<{navigation: any}> = ({navigation, spaceId}) => {
         </View>
         {errors.password && (
           <Text style={{color: 'red', paddingHorizontal: 10}}>
-            Password is required .
+            Password is required.
           </Text>
         )}
+
         <View style={styles.rememberContainer}>
           <TouchableOpacity
             style={styles.checkbox}
@@ -140,7 +133,7 @@ const Login: FC<{navigation: any}> = ({navigation, spaceId}) => {
         </TouchableOpacity>
 
         <TouchableOpacity>
-          <Text style={styles.forgotPassword}>forgot password?</Text>
+          <Text style={styles.forgotPassword}>Forgot password?</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -158,7 +151,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: '20%',
   },
-
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
