@@ -5,7 +5,6 @@ import ContextProvider from './src/components/Context';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { useState, useEffect } from 'react';
 import Orientation from 'react-native-orientation-locker';
-import DrawerApp from './src/navigations/DrawerApp';
 import SplashScreen from './src/components/SplashScreen';
 import StartScreenStack from './src/navigations/StartScreenStack';
 import { Provider } from 'react-redux';
@@ -58,11 +57,6 @@ export default function App() {
                     <Stack.Screen
                       name="SpaceId"
                       component={StartScreenStack}
-                      options={{headerShown: false}}
-                    />
-                    <Stack.Screen
-                      name="DrawerApp"
-                      component={DrawerApp}
                       options={{headerShown: false}}
                     />
                   </Stack.Navigator>

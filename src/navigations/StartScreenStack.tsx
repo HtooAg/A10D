@@ -1,9 +1,8 @@
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {Space} from 'lucide-react-native';
-import React, {Component} from 'react';
-import {Text, View} from 'react-native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React from 'react';
 import SpaceId from './stack/SpaceId';
 import LoginRegister from './stack/LoginRegister';
+import DrawerApp from './DrawerApp';
 
 const StartScreenStack = () => {
   const Stack = createNativeStackNavigator();
@@ -17,6 +16,11 @@ const StartScreenStack = () => {
       <Stack.Screen
         name="Login"
         component={LoginRegister}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Home"
+        component={DrawerApp} 
         options={{headerShown: false}}
       />
     </Stack.Navigator>

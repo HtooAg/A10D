@@ -46,9 +46,24 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
         '/api/v1/users/user-login?',
         loginData,
       );
-      console.log(fetchAPI.data); // Log the API response data
 
-      dispatch(addUser(fetchAPI.data)); // Dispatch the response data
+      //  const serializableData = {
+      //    data: fetchAPI.config.data,
+         
+      //    message: fetchAPI.data.message,
+      //    status: fetchAPI.status,
+      //  };
+      // console.log(fetchAPI.config);
+      dispatch(addUser(fetchAPI.config.data));
+      if(fetchAPI.status === 200){
+        navigation.navigate('Home', {
+          screen: 'HomeStack',
+          params: {
+            spaceId: spaceId,
+            userId: fetchAPI.config.data.id,
+          },
+        });
+      }
     } catch (error) {
       console.log('Failed to login:', error);
     }
