@@ -4,8 +4,8 @@ import {View, Text, StyleSheet, Dimensions} from 'react-native';
 type childType = {
   children: any;
 };
+export const screenWidth = Dimensions.get('window').width; // Get screen width
 const Header: FC<childType> = ({children}) => {
-  const screenWidth = Dimensions.get('window').width; // Get screen width
   return (
     <View style={styles.container}>
       <View
