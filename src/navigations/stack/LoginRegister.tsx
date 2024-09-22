@@ -18,13 +18,16 @@ import Header from '../Header';
 import {FC, useState} from 'react';
 import {ArrowLeft} from 'lucide-react-native';
 import {NavigationType} from '../../type_hint/navType';
+import { mainStyles } from '../../components/MainStyle';
 
 const LoginRegister: FC<NavigationType> = ({navigation, route}) => {
-  const {spaceId} = route.params;
-
+  const {spaceId} = route.params||'';
+  
   const screenWidth = Dimensions.get('window').width; // Get screen width
   const [isToggle, setIsToggle] = useState(true);
+  
 
+  console.log(spaceId)
   return (
     <SafeAreaView style={{flex: 1}}>
       <KeyboardAvoidingView
@@ -58,7 +61,12 @@ const LoginRegister: FC<NavigationType> = ({navigation, route}) => {
                   <ArrowLeft size={28} color="#fff" />
                 </TouchableOpacity>
 
-                <Text style={{...styles.headerTitle, right: screenWidth / 4.5}}>
+                <Text
+                  style={{
+                    ...styles.headerTitle,
+                    right: screenWidth / 4.5,
+                    fontFamily: mainStyles.fontPoppinsRegular,
+                  }}>
                   {isToggle ? 'Login' : 'Register'}
                 </Text>
               </View>
@@ -86,6 +94,7 @@ const LoginRegister: FC<NavigationType> = ({navigation, route}) => {
                     style={[
                       styles.toggleText,
                       !isToggle && styles.activeToggleText,
+                      
                     ]}>
                     Register
                   </Text>
@@ -107,8 +116,8 @@ const LoginRegister: FC<NavigationType> = ({navigation, route}) => {
 const styles = StyleSheet.create({
   bluePart: {
     position: 'absolute',
-    top: -100,
-    backgroundColor: 'blue',
+    top: -90,
+    backgroundColor: mainStyles.backgroundColor,
     borderTopRightRadius: 0,
     borderTopLeftRadius: 0,
   },
@@ -157,11 +166,11 @@ const styles = StyleSheet.create({
   },
   toggleText: {
     fontSize: 16,
-    fontWeight: '500',
-    color: '#666',
+    fontFamily: mainStyles.fontPoppinsRegular,
+    color: '#031f0a',
   },
   activeToggleText: {
-    color: 'white',
+    color: '#e3e3e3',
   },
 });
 

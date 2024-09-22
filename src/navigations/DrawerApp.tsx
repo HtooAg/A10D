@@ -1,7 +1,3 @@
-import React, {useState} from 'react';
-import {Text, View} from 'react-native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {createDrawerNavigator} from '@react-navigation/drawer';
 import {
   Bell,
   HelpCircle,
@@ -20,8 +16,11 @@ import Device from './drawer/Device';
 import LocationStack from './LocationStack';
 import LogoutDrawer from './drawer/LogoutDrawer';
 import AttendanceStack from './drawer/AttendanceStack';
+import {Text, View} from 'react-native';
 import User from './drawer/User';
-
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { useState } from 'react';
 // Stack navigator for managing screens within the home section
 const HomeStackNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -54,13 +53,16 @@ const DrawerApp: React.FC = () => {
         drawerItemStyle: {
           borderRadius: 12,
         },
+        drawerLabelStyle: {
+          fontFamily: 'Poppins-Bold', // Replace with your custom font
+          fontSize: 12, // Optional: Adjust the font size
+        },
       }}>
       {/* User screen at the top of the drawer */}
       <Drawer.Screen
         name="User"
         component={User}
         options={{
-          title: 'Yair Yint Aung',
           headerShown: false,
           drawerInactiveTintColor: '#031f0a',
           drawerActiveTintColor: '#2563eb',
@@ -75,8 +77,8 @@ const DrawerApp: React.FC = () => {
                 paddingBottom: 10,
               }}>
               <User2 color={color} size={45} strokeWidth={1.5} />
-              <Text style={{color: color, fontWeight: '500'}}>
-                Yair Yint Aung
+              <Text style={{color: color, fontFamily: 'Poppins-Bold', fontSize: 15}}>
+                Htoo Aung Wai
               </Text>
               <Text style={{opacity: 0}}>User</Text>
             </View>
@@ -91,7 +93,9 @@ const DrawerApp: React.FC = () => {
         options={{
           title: 'Home',
           headerShown: false,
-          drawerIcon: ({size}) => <HomeIcon size={size} color="black" />,
+          drawerInactiveTintColor: '#031f0a',
+          drawerActiveTintColor: '#2563eb',
+          drawerIcon: ({size, color}) => <HomeIcon size={size} color={color} />,
         }}
       />
 
@@ -100,7 +104,7 @@ const DrawerApp: React.FC = () => {
         component={AttendanceStack}
         options={{
           headerShown: false,
-          drawerIcon: ({size}) => <ListTodo size={size} color="black" />,
+          drawerIcon: ({size, color}) => <ListTodo size={size} color={color} />,
         }}
       />
 
@@ -109,16 +113,20 @@ const DrawerApp: React.FC = () => {
         component={LocationStack}
         options={{
           headerShown: false,
-          drawerIcon: ({size}) => <LocateIcon size={size} color="black" />,
+          drawerIcon: ({size, color}) => (
+            <LocateIcon size={size} color={color} />
+          ),
         }}
       />
 
       <Drawer.Screen
-        name="Change"
+        name="ChangePassword"
         component={Change}
         options={{
           headerShown: false,
-          drawerIcon: ({size}) => <TimerReset size={size} color="black" />,
+          drawerIcon: ({size, color}) => (
+            <TimerReset size={size} color={color} />
+          ),
         }}
       />
 
@@ -127,7 +135,9 @@ const DrawerApp: React.FC = () => {
         component={Device}
         options={{
           headerShown: false,
-          drawerIcon: ({size}) => <Smartphone size={size} color="black" />,
+          drawerIcon: ({size, color}) => (
+            <Smartphone size={size} color={color} />
+          ),
         }}
       />
 
@@ -136,7 +146,7 @@ const DrawerApp: React.FC = () => {
         component={Noti}
         options={{
           headerShown: false,
-          drawerIcon: ({size}) => <Bell size={size} color="black" />,
+          drawerIcon: ({size, color}) => <Bell size={size} color={color} />,
         }}
       />
 
@@ -145,7 +155,9 @@ const DrawerApp: React.FC = () => {
         component={Help}
         options={{
           headerShown: false,
-          drawerIcon: ({size}) => <HelpCircle size={size} color="black" />,
+          drawerIcon: ({size, color}) => (
+            <HelpCircle size={size} color={color} />
+          ),
         }}
       />
     </Drawer.Navigator>

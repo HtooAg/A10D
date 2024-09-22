@@ -11,6 +11,8 @@ import {AlignLeft, Smartphone, HomeIcon} from 'lucide-react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import DeviceChange from '../../alert/DeviceChange';
 import ContextProvider from '../../components/Context';
+import { mainStyles } from '../../components/MainStyle';
+import { screenWidth } from '../Header';
 
 type Device = {
   setChangeDevice: boolean;
@@ -39,7 +41,7 @@ const Device: React.FC<Types> = ({navigation}) => {
         </TouchableOpacity>
         <Text style={styles.headerTxt}>Device Register List</Text>
       </View>
-      <View style={{flex: 2, marginTop: 80, rowGap: 10}}>
+      <View style={{flex: 2, marginVertical: screenWidth / 2, rowGap: 10}}>
         <TouchableOpacity
           style={styles.changeDevice}
           onPress={() => setChangeDevice(true)}>
@@ -49,8 +51,22 @@ const Device: React.FC<Types> = ({navigation}) => {
         <View style={{...styles.card}}>
           <ScrollView contentContainerStyle={{rowGap: 20}}>
             <View style={styles.cardBody}>
-              <Text style={{color: '#000'}}>Android</Text>
-              <Text style={{color: '#000'}}>Android version...</Text>
+              <Text
+                style={{
+                  color: '#000',
+                  fontSize: mainStyles.textFontSize,
+                  fontFamily: mainStyles.fontPoppinsRegular,
+                }}>
+                Android
+              </Text>
+              <Text
+                style={{
+                  color: '#000',
+                  fontSize: mainStyles.textFontSize,
+                  fontFamily: mainStyles.fontPoppinsRegular,
+                }}>
+                Android version...
+              </Text>
             </View>
             <View
               style={{
@@ -75,25 +91,25 @@ const styles = StyleSheet.create({
   bluePart: {
     position: 'absolute',
     top: -100,
-    backgroundColor: '#0032fc',
+    backgroundColor: mainStyles.backgroundColor,
     borderTopRightRadius: 0,
     borderTopLeftRadius: 0,
     justifyContent: 'center',
     alignItems: 'center',
   },
   header: {
-    right: 30,
-    top: 20,
+    right: screenWidth / 6,
+    top: screenWidth / 20,
     flex: 1,
   },
   headerTxt: {
     color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 35,
+    fontSize: mainStyles.headerFontsize,
+    fontFamily: mainStyles.fontPoppinsBold,
     letterSpacing: 1,
     paddingStart: 50,
     paddingTop: 30,
-    width: 290,
+    width: 230,
   },
   changeDevice: {
     flexDirection: 'row',
@@ -104,6 +120,8 @@ const styles = StyleSheet.create({
   changeDevice_Txt: {
     color: '#2563eb',
     textDecorationLine: 'underline',
+    fontSize: mainStyles.textFontSize,
+    fontFamily: mainStyles.fontPoppinsRegular,
   },
   card: {
     backgroundColor: '#fff',
@@ -126,6 +144,8 @@ const styles = StyleSheet.create({
   cardTxt: {
     textTransform: 'uppercase',
     color: '#fff',
+    fontSize: mainStyles.textFontSize,
+    fontFamily: mainStyles.fontPoppinsRegular,
   },
 });
 

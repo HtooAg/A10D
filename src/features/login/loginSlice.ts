@@ -3,17 +3,15 @@ import {createSlice} from '@reduxjs/toolkit';
 const loginSlice = createSlice({
   name: 'login',
   initialState: {
-    loginUser: [],
+    loginUser: {},
   },
   reducers: {
-    addUser: (state, action) => {
-      state.loginUser = action.payload;
+    addLoginUser: (state, action) => {
+      state.loginUser = action.payload; // Correctly reference the nested structure
     },
   },
 });
 
-
-
-export const {addUser} = loginSlice.actions;
+export const {addLoginUser} = loginSlice.actions;
 
 export default loginSlice.reducer;

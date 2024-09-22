@@ -8,13 +8,14 @@ import {
   ScrollView,
 } from 'react-native';
 import {NavigationType} from '../../type_hint/navType';
+import { mainStyles } from '../../components/MainStyle';
 
 const AttendanceDetails: React.FC<NavigationType> = ({navigation}) => {
   return (
     <View style={styles.container}>
       <View style={styles.navBar}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <ChevronLeft color={'#fff'} size={35} strokeWidth={0.9} />
+          <ChevronLeft color={'#fff'} size={35} />
         </TouchableOpacity>
         <Text style={styles.navBar_Txt}>Attendance Details</Text>
         <Text style={{opacity: 0}}>Detail</Text>
@@ -54,13 +55,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
+    paddingHorizontal: 10,
     paddingVertical: 10,
   },
   navBar_Txt: {
-    fontSize: 25,
+    fontSize: mainStyles.navFontSize,
+    fontFamily: mainStyles.fontPoppinsBold,
     color: '#fff',
-    fontWeight: '600',
   },
   card: {
     flexDirection: 'row',

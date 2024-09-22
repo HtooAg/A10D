@@ -11,7 +11,8 @@ import {
   Eye,
   LockIcon,
   Mail,
-  EyeOff, User,
+  EyeOff,
+  User,
   Fingerprint,
   Phone,
   AlertTriangle
@@ -26,7 +27,9 @@ import {
   AlertNotificationRoot,
   Toast,
 } from 'react-native-alert-notification';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { addRegisterUser } from '../../features/register/RegisterSlice';
+import { mainStyles } from '../../components/MainStyle';
 
 type RegisterData = {
   name: string;
@@ -39,6 +42,7 @@ type RegisterData = {
 
 const Register: FC<NavigationType> = ({navigation, spaceId}) => {
 
+  const [isPressed, setIsPressed] = useState(false);
   const {
     control,
     handleSubmit,
@@ -55,17 +59,29 @@ const Register: FC<NavigationType> = ({navigation, spaceId}) => {
     },
   });
 
+  console.log(spaceId);
+
   const [showPassword, setShowPassword] = useState(false);
+   const dispatch = useDispatch();
+   const RegisterUser = useSelector(state => state.register.registerUser);
+
+console.log('Register User: ', RegisterUser.email);
+
+
 
   const onSubmit = async (registerData: RegisterData) => {
+    
     try {
       const response = await postRequest(
-        '/api/v1/users/register',
+        '/api/v1/users/register?',
         registerData,
       );
 
-      // console.log(response.data)
-      
+
+      if (response.data.status === 'success'){
+        dispatch(addRegisterUser(response.data.data));
+      }
+      console.log('Api Data: ', response.data);
 
       if (response.data.status === 'fail') {
         Toast.show({
@@ -77,17 +93,17 @@ const Register: FC<NavigationType> = ({navigation, spaceId}) => {
         Toast.show({
           type: ALERT_TYPE.SUCCESS,
           title: 'Success',
-          textBody: 'Register successful!',
+          textBody: response.data.message,
         });
       }
-    reset({
-      name: '',
-      email: '',
-      password: '',
-      space_id: spaceId,
-      staffid: '',
-      phoneNo: '',
-    });
+      // reset({
+      //   name: '',
+      //   email: '',
+      //   password: '',
+      //   space_id: spaceId,
+      //   staffid: '',
+      //   phoneNo: '',
+      // });
       // navigation.navigate('Home');
     } catch (error) {
       console.error('Error during registration:', error);
@@ -198,7 +214,14 @@ const Register: FC<NavigationType> = ({navigation, spaceId}) => {
             )}
             name="password"
           />
-          <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+          <TouchableOpacity
+            onPressIn={() => setIsPressed(true)}
+            onPressOut={() => setIsPressed(false)}
+            onPress={() => setShowPassword(!showPassword)}
+            style={[
+              styles.eye_icon,
+              {backgroundColor: isPressed ? '#000' : '#fff'},
+            ]}>
             {showPassword ? (
               <Eye size={20} color="#000" />
             ) : (
@@ -272,8 +295,14 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     paddingVertical: 12,
-    fontSize: 16,
+    fontSize: mainStyles.textFontSize,
+    fontFamily: mainStyles.fontPoppinsItalic,
     color: '#000',
+  },
+  eye_icon: {
+    paddingVertical: 5,
+    paddingHorizontal: 5,
+    borderRadius: 25,
   },
   loginButton: {
     backgroundColor: '#2563eb',
@@ -284,8 +313,8 @@ const styles = StyleSheet.create({
   },
   loginButtonText: {
     color: 'white',
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: mainStyles.textFontSize,
+    fontFamily: mainStyles.fontPoppinsSemiBoldItalic,
   },
 });
 

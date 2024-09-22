@@ -1,19 +1,18 @@
-import {StyleSheet, SafeAreaView, StatusBar} from 'react-native';
-import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import LoginRegister from './src/navigations/stack/LoginRegister';
-import SpaceId from './src/navigations/stack/SpaceId';
+
+import { StyleSheet, SafeAreaView, StatusBar } from 'react-native';
+import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ContextProvider from './src/components/Context';
-import {createDrawerNavigator} from '@react-navigation/drawer';
-import {useState, useEffect} from 'react';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { useState, useEffect } from 'react';
 import Orientation from 'react-native-orientation-locker';
-import DrawerApp from './src/navigations/DrawerApp';
 import SplashScreen from './src/components/SplashScreen';
 import StartScreenStack from './src/navigations/StartScreenStack';
-import {Provider} from 'react-redux';
+import { Provider } from 'react-redux';
 import { store, persistor } from './src/store/Store';
 import { PersistGate } from 'redux-persist/es/integration/react';
 import { AlertNotificationRoot } from 'react-native-alert-notification';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 
 export default function App() {
@@ -39,6 +38,8 @@ export default function App() {
       <StatusBar backgroundColor="#0032fc" />
       <Provider store={store}>
         <PersistGate persistor={persistor}>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+
             <AlertNotificationRoot>
 
               <NavigationContainer theme={DefaultTheme}>
@@ -60,7 +61,7 @@ export default function App() {
                   ) : (
                     <Stack.Navigator>
                       <Stack.Screen
-                        name="SpaceId"
+                        name="App"
                         component={StartScreenStack}
                         options={{headerShown: false}}
                       />
@@ -69,6 +70,7 @@ export default function App() {
                 </ContextProvider.Provider>
               </NavigationContainer>
             </AlertNotificationRoot>
+          </GestureHandlerRootView>
         </PersistGate>
       </Provider>
     </SafeAreaView>
