@@ -13,7 +13,6 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  FlatList,
 } from 'react-native';
 import {Controller, useForm} from 'react-hook-form';
 import {postRequest} from '../../api/Api';
@@ -38,32 +37,36 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
   });
 
   const dispatch = useDispatch();
-  const loginUser = useSelector(state => state.login.loginUser);
   const RegisterUser = useSelector(state => state.register.registerUser);
 
   const userEmail = RegisterUser?.email;
   const userPassword = RegisterUser?.password;
-  console.log('Login: ', loginUser);
-  console.log('Register: ', RegisterUser);
-  console.log('Register: ', userEmail);
+
+  console.log('Register User:', userEmail);
 
   const onSubmit = async loginData => {
     try {
-      const fetchAPI = await postRequest(
-        '/api/v1/users/user-login?',
-        loginData,
-      );
-      // console.log(fetchAPI.config);
-      dispatch(addRegisterUser(fetchAPI.config.data));
-      // if(loginData.email && loginData.password === RegisterUser.email && RegisterUser.password){
-      //   navigation.navigate('Home', {
-      //     screen: 'HomeStack',
-      //     params: {
-      //       spaceId: spaceId,
-      //       userId: fetchAPI.config.data.id,
-      //     },
-      //   });
-      // }
+      const fetchAPI = await postRequest('/api/v1/users/user-login', loginData);
+      const apiResponseData = fetchAPI?.data;
+
+      if (apiResponseData) {
+        dispatch(addRegisterUser(apiResponseData));
+
+        // Navigate to Home if login is successful
+        if (
+          loginData.email === apiResponseData.email &&
+          loginData.password === apiResponseData.password
+        ) {
+          navigation.navigate('Home', {
+            screen: 'HomeStack',
+            params: {
+              spaceId: spaceId,
+              userId: apiResponseData.id,
+            },
+          });
+        }
+      }
+
       reset({
         email: '',
         password: '',
@@ -71,6 +74,7 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
       });
     } catch (error) {
       console.log('Failed to login:', error);
+      // You can display an error message to the user here
     }
   };
 
@@ -80,6 +84,7 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
   return (
     <View style={styles.card}>
       <View style={{marginTop: 20}}>
+        {/* Email Input */}
         <View style={styles.inputContainer}>
           <Mail size={20} color="#000" style={styles.inputIcon} />
           <Controller
@@ -98,22 +103,14 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
             )}
             name="email"
           />
-          {/* {RegisterUser?.map(user => {
-            console.log('User Email: ', user.email);
-            console.log('User Password: ', user.password);
-            return (
-              <View key={user.id}>
-                <Text>{user.email}</Text>
-                <Text>{user.password}</Text>
-              </View>
-            );
-          })} */}
         </View>
         {errors.email && (
           <Text style={{color: 'red', paddingHorizontal: 10}}>
             Email is required.
           </Text>
         )}
+
+        {/* Password Input */}
         <View style={styles.inputContainer}>
           <LockIcon size={20} color="#000" style={styles.inputIcon} />
           <Controller
@@ -146,6 +143,7 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
           </Text>
         )}
 
+        {/* Remember Me */}
         <View style={styles.rememberContainer}>
           <TouchableOpacity
             style={styles.checkbox}
@@ -155,6 +153,7 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
           <Text style={styles.rememberText}>Remember me</Text>
         </View>
 
+        {/* Login Button */}
         <TouchableOpacity
           style={styles.loginButton}
           onPress={handleSubmit(onSubmit)}>
