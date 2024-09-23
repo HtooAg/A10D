@@ -17,11 +17,20 @@ import {
   Alert,
 } from 'react-native';
 import {Controller, useForm} from 'react-hook-form';
-import {postRequest} from '../../api/Api';
+import {loginRequest, postRequest} from '../../api/Api';
 import {useDispatch, useSelector} from 'react-redux';
 import {addLoginUser} from '../../features/login/loginSlice';
 import {addRegisterUser} from '../../features/register/RegisterSlice';
 import { mainStyles } from '../../components/MainStyle';
+
+
+type LoginData = {
+  
+  email: string;
+  password: string;
+  space_id: number;
+  
+};
 
 const Login: FC<{navigation: any; spaceId: string}> = ({
   navigation,
@@ -46,7 +55,7 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
 
   // const userEmail = RegisterUser?.email;
   // const userPassword = RegisterUser?.password;
-  console.log('Login: ', loginUser);
+  console.log('Login Slice: ', loginUser);
   // console.log('Login Detail : ', loginUser.email);
   // console.log('Register: ', RegisterUser);
   // console.log('Register Detail : ', RegisterUser.trim().name);
@@ -54,24 +63,22 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
   //   console.log(`${key}: ${RegisterUser[key]}`);
   // });
 
-  const onSubmit = async loginData => {
+  const onSubmit = async (loginData: LoginData) => {
     try {
-      const fetchAPI = await postRequest(
-        '/api/v1/users/user-login?',
-        loginData,
+      const fetchAPI = await loginRequest(
+        `/api/v1/users/user-login?space-id=${loginData.space_id}&email=${loginData.email}&password=${loginData.password}`
       );
 
       
-        console.log('Login Data: ',fetchAPI.data);
-        
-          dispatch(addLoginUser(fetchAPI.data));
-        if(fetchAPI.request.status===200){
-
+        console.log('Login Data: ',fetchAPI.data.data);
+        dispatch(addLoginUser(fetchAPI.data.data));
+        if (fetchAPI.data.status === 'success') {
           navigation.navigate('Home', {
             screen: 'HomeStack',
             params: {
               spaceId: spaceId,
-              user: loginUser,
+              user: loginUser.user,
+              token: loginUser.token,
             },
           });
         }

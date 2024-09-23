@@ -12,6 +12,8 @@ export const getRequest = async URL => await axiosInstance.get(URL);
 
 export const postRequest = async (URI, payload) => await axiosInstance.post(URI, payload);
 
+export const loginRequest = async (URI) => await axiosInstance.post(URI);
+
 //    export const putRequest = async (URI, payload) => await axiosInstance.put(URI, payload);
 
 //    export const patchRequest = async (URI, payload) =>
