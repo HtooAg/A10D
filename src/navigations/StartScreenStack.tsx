@@ -3,24 +3,21 @@ import React from 'react';
 import SpaceId from './stack/SpaceId';
 import LoginRegister from './stack/LoginRegister';
 import DrawerApp from './DrawerApp';
+import StackScreens from './StackScreens';
 
 const StartScreenStack = () => {
   const Stack = createNativeStackNavigator();
   return (
-    <Stack.Navigator initialRouteName="SpaceId">
+    <Stack.Navigator initialRouteName="StackScreen">
       <Stack.Screen
-        name="SpaceId"
-        component={SpaceId}
+        name="StackScreen"
+        component={StackScreens}
         options={{headerShown: false}}
       />
-      <Stack.Screen
-        name="Login"
-        component={LoginRegister}
-        options={{headerShown: false}}
-      />
+
       <Stack.Screen
         name="Home"
-        component={DrawerApp} 
+        component={DrawerApp}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

@@ -8,7 +8,7 @@ import RegisterSlice from '../features/register/RegisterSlice';
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['login'], 
+  // whitelist: ['login'], 
 };
 
 // Combine your reducers (replace with actual reducers)

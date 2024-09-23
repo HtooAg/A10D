@@ -11,6 +11,8 @@ import {NavigationType} from '../../type_hint/navType';
 import {AlignLeft, Clock} from 'lucide-react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {useState} from 'react';
+import {mainStyles} from '../../components/MainStyle';
+import {screenWidth} from '../Header';
 
 type Noti = {
   setChangeDevice: boolean;
@@ -43,7 +45,14 @@ const Noti: React.FC<Types> = ({navigation}) => {
         <View style={{...styles.card}}>
           <ScrollView contentContainerStyle={{rowGap: 10}}>
             <View style={styles.cardBody}>
-              <Text style={{color: '#000'}}>Notification Alert</Text>
+              <Text
+                style={{
+                  color: '#000',
+                  fontSize: mainStyles.textFontSize,
+                  fontFamily: mainStyles.fontPoppinsRegular,
+                }}>
+                Notification Alert
+              </Text>
               <Switch
                 trackColor={{false: '#767577', true: '#81b0ff'}}
                 thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
@@ -53,18 +62,46 @@ const Noti: React.FC<Types> = ({navigation}) => {
               />
             </View>
             <View style={styles.cardBody}>
-              <Text style={{color: '#000'}}>Check In Time</Text>
+              <Text
+                style={{
+                  color: '#000',
+                  fontSize: mainStyles.textFontSize,
+                  fontFamily: mainStyles.fontPoppinsRegular,
+                }}>
+                Check In Time
+              </Text>
               <View
                 style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
-                <Text style={{color: 'lightgreen'}}>9:00 AM</Text>
+                <Text
+                  style={{
+                    color: 'lightgreen',
+                    fontSize: mainStyles.textFontSize,
+                    fontFamily: mainStyles.fontPoppinsRegular,
+                  }}>
+                  9:00 AM
+                </Text>
                 <Clock size={21} color="lightgreen" />
               </View>
             </View>
             <View style={styles.cardBody}>
-              <Text style={{color: '#000'}}>Check Out Time</Text>
+              <Text
+                style={{
+                  color: '#000',
+                  fontSize: mainStyles.textFontSize,
+                  fontFamily: mainStyles.fontPoppinsRegular,
+                }}>
+                Check Out Time
+              </Text>
               <View
                 style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
-                <Text style={{color: 'lightgreen'}}>9:00 AM</Text>
+                <Text
+                  style={{
+                    color: 'lightgreen',
+                    fontSize: mainStyles.textFontSize,
+                    fontFamily: mainStyles.fontPoppinsRegular,
+                  }}>
+                  9:00 AM
+                </Text>
                 <Clock size={21} color="lightgreen" />
               </View>
             </View>
@@ -79,21 +116,21 @@ const styles = StyleSheet.create({
   bluePart: {
     position: 'absolute',
     top: -100,
-    backgroundColor: '#0032fc',
+    backgroundColor: mainStyles.backgroundColor,
     borderTopRightRadius: 0,
     borderTopLeftRadius: 0,
     justifyContent: 'center',
     alignItems: 'center',
   },
   header: {
-    right: 30,
-    top: 20,
+    right: screenWidth / 13,
+    top: screenWidth / 25,
     flex: 1,
   },
   headerTxt: {
     color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 35,
+    fontSize: mainStyles.navFontSize,
+    fontFamily: mainStyles.fontPoppinsBold,
     letterSpacing: 1,
     paddingStart: 50,
     paddingTop: 30,

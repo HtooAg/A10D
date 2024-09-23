@@ -3,6 +3,7 @@ import {Text, StyleSheet, View, TouchableOpacity} from 'react-native';
 import {screenWidth} from '../Header';
 import {AlignLeft, User2} from 'lucide-react-native';
 import { NavigationType } from '../../type_hint/navType';
+import { mainStyles } from '../../components/MainStyle';
 const User: React.FC<NavigationType> = ({navigation}) => {
   return (
     <View style={styles.container}>
@@ -16,11 +17,11 @@ const User: React.FC<NavigationType> = ({navigation}) => {
           },
         ]}
       />
-      <View style={{top: 15}}>
+      <View style={{top: 15, flex: 0.7}}>
         <View style={{...styles.header}}>
           <TouchableOpacity
             onPress={() => navigation.openDrawer()}
-            style={{left: 310}}>
+            style={{left: screenWidth / 1.23}}>
             <AlignLeft color={'#fff'} size={35} />
           </TouchableOpacity>
           <Text style={styles.headerTxt}>User Profile</Text>
@@ -32,14 +33,16 @@ const User: React.FC<NavigationType> = ({navigation}) => {
           <Text style={styles.headerCardSubText}>Email: </Text>
         </View>
       </View>
-      <View style={styles.card}>
-        <View>
-          <Text style={styles.cardTxt}>Staff Id</Text>
-          <Text style={styles.cardTxt}>0000</Text>
-        </View>
-        <View>
-          <Text style={styles.cardTxt}>Space Name</Text>
-          <Text style={styles.cardTxt}>LOGCDC</Text>
+      <View style={{flex: 1}}>
+        <View style={styles.card}>
+          <View>
+            <Text style={styles.cardTxt}>Staff Id</Text>
+            <Text style={styles.cardTxt}>0000</Text>
+          </View>
+          <View>
+            <Text style={styles.cardTxt}>Space Name</Text>
+            <Text style={styles.cardTxt}>LOGCDC</Text>
+          </View>
         </View>
       </View>
     </View>
@@ -54,7 +57,7 @@ const styles = StyleSheet.create({
   bluePart: {
     position: 'absolute',
     top: -100,
-    backgroundColor: '#0032fc',
+    backgroundColor: mainStyles.backgroundColor,
     borderTopRightRadius: 0,
     borderTopLeftRadius: 0,
     justifyContent: 'center',
@@ -66,27 +69,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    // paddingTop: 70,
-    // top: 210,
   },
   headerTxt: {
     color: '#fafcfc',
-    fontWeight: 'bold',
-    fontSize: 22,
+    fontSize: mainStyles.navFontSize,
+    fontFamily: mainStyles.fontPoppinsBold,
     letterSpacing: 1,
   },
   headerCard: {
     alignItems: 'center',
-    marginTop: 20,
     rowGap: 15,
   },
   headerCardText: {
-    fontSize: 23,
-    fontWeight: '500',
+    fontSize: 20,
+    fontFamily: mainStyles.fontPoppinsBold,
     color: '#fafcfc',
   },
   headerCardSubText: {
     fontSize: 16,
+    fontFamily: mainStyles.fontPoppinsRegular,
     color: '#fafcfc',
     marginBottom: 20,
   },
@@ -101,9 +102,9 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   cardTxt: {
-    fontSize: 18,
+    fontSize: 14,
     color: '#000',
-    fontWeight: '600',
+    fontFamily: mainStyles.fontPoppinsRegular,
   },
 });
 

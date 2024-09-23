@@ -10,6 +10,7 @@ import {
 import React, {Component, FC} from 'react';
 import {Text, StyleSheet, View, TouchableOpacity, Alert} from 'react-native';
 import { NavigationType } from '../../type_hint/navType';
+import { mainStyles } from '../../components/MainStyle';
 
 const Location: FC<NavigationType> = ({navigation}) => {
   return (
@@ -26,7 +27,12 @@ const Location: FC<NavigationType> = ({navigation}) => {
 
       <View style={styles.cardNoAtt}>
         <ClipboardPenLine color={'#ccc'} size={250} strokeWidth={0.5} />
-        <Text style={{color: '#000', fontSize: 20, fontWeight: 'bold'}}>
+        <Text
+          style={{
+            color: '#000',
+            fontSize: mainStyles.textFontSize,
+            fontFamily: mainStyles.fontPoppinsRegular,
+          }}>
           There is no location records
         </Text>
       </View>
@@ -40,14 +46,13 @@ const styles = StyleSheet.create({
     height: 80,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingTop: 25,
-    paddingLeft: 25,
+    paddingHorizontal: 15,
+    paddingTop: 15,
   },
   headerTxt: {
     color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 25,
+    fontSize: mainStyles.navFontSize,
+    fontFamily: mainStyles.fontPoppinsBold,
     letterSpacing: 1,
   },
   card: {

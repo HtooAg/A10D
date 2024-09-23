@@ -11,6 +11,7 @@ import {ChevronLeft} from 'lucide-react-native';
 import GetLocation from './GetLocation';
 import MapView, {Marker} from 'react-native-maps';
 import BottomSheet, {BottomSheetView} from '@gorhom/bottom-sheet';
+import { mainStyles } from '../../components/MainStyle';
 
 const AttendanceDetailOfLocation: React.FC<NavigationType> = ({navigation}) => {
   const [markers, setMarkers] = useState([
@@ -163,9 +164,9 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   navBar_Txt: {
-    fontSize: 18,
+    fontSize: mainStyles.navFontSize,
+    fontFamily: mainStyles.fontPoppinsBold,
     color: '#fff',
-    fontWeight: '600',
   },
   map: {
     ...StyleSheet.absoluteFillObject,

@@ -7,6 +7,7 @@ import {
 } from '@react-navigation/drawer';
 import Modal from 'react-native-modal';
 import {DoorOpen, LogOut} from 'lucide-react-native';
+import { mainStyles } from '../../components/MainStyle';
 
 type LogoutDrawerProps = {
   navigation: any;
@@ -38,6 +39,11 @@ const LogoutDrawer: React.FC<LogoutDrawerProps> = props => {
         icon={() => <LogOut size={23} color={'black'} />}
         onPress={handleLogoutPress}
         labelStyle={{color: 'black'}}
+        labelStyle={{
+          color: 'black',
+          fontFamily: 'Poppins-Bold', // Add your custom font here
+          fontSize: 12, // Optional: Adjust the font size
+        }}
       />
 
       <Modal isVisible={isModalVisible} onBackdropPress={handleLogoutCancel}>
@@ -85,13 +91,13 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   modalTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    // marginBottom: 10,
+    fontSize: mainStyles.headerFontsize,
+    fontFamily: mainStyles.fontPoppinsRegular,
     color: 'black',
   },
   modalMessage: {
-    fontSize: 16,
+    fontSize: mainStyles.textFontSize,
+    fontFamily: mainStyles.fontPoppinsRegular,
     color: 'grey',
   },
   buttonContainer: {
@@ -113,7 +119,8 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'white',
-    fontWeight: 'bold',
+    fontSize: mainStyles.textFontSize,
+    fontFamily: mainStyles.fontPoppinsRegular,
   },
   baseColor: {
     backgroundColor: '#2563eb',

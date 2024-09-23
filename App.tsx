@@ -12,6 +12,7 @@ import { Provider } from 'react-redux';
 import { store, persistor } from './src/store/Store';
 import { PersistGate } from 'redux-persist/es/integration/react';
 import { AlertNotificationRoot } from 'react-native-alert-notification';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 
 export default function App() {
@@ -37,6 +38,8 @@ export default function App() {
       <StatusBar backgroundColor="#0032fc" />
       <Provider store={store}>
         <PersistGate persistor={persistor}>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+
             <AlertNotificationRoot>
 
               <NavigationContainer theme={DefaultTheme}>
@@ -58,7 +61,7 @@ export default function App() {
                   ) : (
                     <Stack.Navigator>
                       <Stack.Screen
-                        name="SpaceId"
+                        name="App"
                         component={StartScreenStack}
                         options={{headerShown: false}}
                       />
@@ -67,6 +70,7 @@ export default function App() {
                 </ContextProvider.Provider>
               </NavigationContainer>
             </AlertNotificationRoot>
+          </GestureHandlerRootView>
         </PersistGate>
       </Provider>
     </SafeAreaView>

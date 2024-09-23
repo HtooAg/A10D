@@ -5,6 +5,7 @@ import GetLocation from './GetLocation';
 import {ChevronLeft} from 'lucide-react-native';
 import BottomSheet, {BottomSheetView} from '@gorhom/bottom-sheet';
 import { TextInput } from 'react-native-gesture-handler';
+import { mainStyles } from '../../components/MainStyle';
 const apiKey = `AIzaSyCvalwepO3-J4QeiNP5SjmMwttdh44NOsw`;
 const GoogleMap = ({navigation}) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -118,20 +119,18 @@ const styles = StyleSheet.create({
     height: 80,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     paddingTop: 25,
-    paddingLeft: 25,
     zIndex: 1,
   },
   headerTitle: {
     fontWeight: 'bold',
     fontSize: 20,
-    color: "#000"
+    color: '#000',
   },
   sheetStyle: {
-    paddingHorizontal:12,
+    paddingHorizontal: 12,
     paddingVertical: 12,
-   
   },
   inputStyle: {
     backgroundColor: '#fff',
@@ -155,7 +154,6 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-
   },
   addressStyle: {
     flexDirection: 'row',
@@ -164,13 +162,13 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     fontSize: 16,
     color: '#333',
-    alignItems: "center",
+    alignItems: 'center',
     gap: 50,
   },
   headerTxt: {
     color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 25,
+    fontSize: mainStyles.navFontSize,
+    fontFamily: mainStyles.fontPoppinsBold,
     letterSpacing: 1,
   },
   container: {

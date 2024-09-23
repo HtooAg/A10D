@@ -11,6 +11,7 @@ import {
 import Header from '../Header';
 import {AlignLeft} from 'lucide-react-native';
 import { NavigationType } from '../../type_hint/navType';
+import { mainStyles } from '../../components/MainStyle';
 
 const Home: FC<NavigationType> = ({navigation}) => {
   const screenWidth = Dimensions.get('window').width;
@@ -40,7 +41,7 @@ const Home: FC<NavigationType> = ({navigation}) => {
   const month = currentTime.toLocaleString('default', {month: 'short'}); // Full month name
   const date = currentTime.getDate();
   return (
-    <>
+    <View style={{flex: 1}}>
       <Header>
         <View
           style={[
@@ -48,8 +49,8 @@ const Home: FC<NavigationType> = ({navigation}) => {
             {
               flexDirection: 'row',
               alignItems: 'center',
-              top: screenWidth / 15,
-              paddingHorizontal: 21,
+              top: screenWidth / 30.5,
+              paddingHorizontal: 15,
             },
           ]}>
           <View style={{flex: 1}}>
@@ -62,18 +63,29 @@ const Home: FC<NavigationType> = ({navigation}) => {
           </View>
           <View style={{flex: 1}} />
         </View>
-        <View style={{alignItems: 'center', justifyContent: 'center', marginTop: 30}}>
+        <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginTop: 30,
+          }}>
           <Text
             style={{
-              fontSize: 40,
+              fontSize: 35,
               color: '#fff',
               marginBottom: 20,
               marginTop: 20,
-              fontWeight: 'bold',
+              fontFamily: mainStyles.fontPoppinsRegular,
             }}>
             {hours}:{minutes}:{seconds} {hours > 12 ? 'PM' : 'AM'}
           </Text>
-          <Text style={{fontSize: 25, color: '#fff', marginBottom: 20}}>
+          <Text
+            style={{
+              fontSize: 20,
+              color: '#fff',
+              marginBottom: 20,
+              fontFamily: mainStyles.fontPoppinsRegular,
+            }}>
             {dayOfWeek}, {date} {month} {year}
           </Text>
         </View>
@@ -81,19 +93,40 @@ const Home: FC<NavigationType> = ({navigation}) => {
       <View style={{flex: 1}}>
         <View style={styles.card}>
           <View>
-            <Text style={{color: '#000'}}>CheckIn</Text>
+            <Text
+              style={{
+                color: '#000',
+                fontFamily: mainStyles.fontPoppinsRegular,
+              }}>
+              CheckIn
+            </Text>
           </View>
           <View style={styles.cardItem}>
-            <Text style={{color: '#000'}}>Free</Text>
+            <Text
+              style={{
+                color: '#000',
+                fontFamily: mainStyles.fontPoppinsRegular,
+              }}>
+              Free
+            </Text>
             <View style={{height: 80, borderLeftWidth: 1}}></View>
-            <Text style={{color: '#000'}}>Checkin Location</Text>
+            <Text
+              style={{
+                color: '#000',
+                fontFamily: mainStyles.fontPoppinsRegular,
+              }}>
+              Checkin Location
+            </Text>
           </View>
           <View>
             <Text style={{opacity: 0}}>CheckIn</Text>
           </View>
         </View>
         <View style={styles.cardCheckIn}>
-          <Text style={{color: '#000'}}>Free Check In</Text>
+          <Text
+            style={{color: '#000', fontFamily: mainStyles.fontPoppinsRegular}}>
+            Free Check In
+          </Text>
           <Switch
             trackColor={{false: '#767577', true: '#81b0ff'}}
             thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
@@ -106,21 +139,27 @@ const Home: FC<NavigationType> = ({navigation}) => {
       <TouchableOpacity
         style={{...styles.cardCheckOut, opacity: isEnabled ? 0.3 : 1}}
         onPress={() => Alert.alert('Hi')}>
-        <Text style={{color: '#fff', fontSize: 20, fontWeight: 'bold'}}>
+        <Text
+          style={{
+            color: '#fff',
+            fontSize: 20,
+            fontWeight: 'bold',
+            fontFamily: mainStyles.fontPoppinsRegular,
+          }}>
           Check-Out
         </Text>
       </TouchableOpacity>
-    </>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   headerTxt: {
     color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 25,
+    fontSize: mainStyles.navFontSize,
     letterSpacing: 1,
     alignItems: 'center',
+    fontFamily: mainStyles.fontPoppinsBold,
   },
   headerCard: {
     // alignItems: 'center',
@@ -140,13 +179,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: '30%',
     transform: [{translateY: -100}],
-
   },
   cardItem: {
     alignItems: 'center',
   },
   cardCheckIn: {
-    marginTop: "80%",
+    marginTop: '90%',
     position: 'absolute',
     // top: '55%',
     left: '70%',
@@ -164,7 +202,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     elevation: 5,
     alignSelf: 'center',
-    bottom: "20%",
+    bottom: '10%',
   },
 });
 

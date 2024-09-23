@@ -10,7 +10,8 @@ import {
 import { NavigationType } from '../../type_hint/navType';
 import HelpModal from '../../alert/HelpModal';
 import ContextProvider from '../../components/Context';
-import Header from '../Header';
+import Header, { screenWidth } from '../Header';
+import { mainStyles } from '../../components/MainStyle';
 const Help: React.FC<NavigationType> = ({navigation}) => {
   const screenWidth = Dimensions.get('window').width;
   const {
@@ -77,7 +78,7 @@ const styles = StyleSheet.create({
   bluePart: {
     position: 'absolute',
     top: -100,
-    backgroundColor: '#0032fc',
+    backgroundColor: mainStyles.backgroundColor,
     borderTopRightRadius: 0,
     borderTopLeftRadius: 0,
     justifyContent: 'center',
@@ -94,14 +95,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 25,
     paddingTop: 70,
-    top: 200,
+    top: screenWidth / 2.1,
   },
   headerTxt: {
     color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 25,
+    fontSize: mainStyles.headerFontsize,
+    fontFamily: mainStyles.fontPoppinsBold,
     letterSpacing: 1,
-    top: 100,
+    top: screenWidth / 3,
     right: 50,
   },
   card: {
@@ -111,12 +112,13 @@ const styles = StyleSheet.create({
   },
   cardTxt_header: {
     color: '#031f0a',
-    fontSize: 25,
-    fontWeight: '500',
+    fontSize: mainStyles.headerFontsize,
+    fontFamily: mainStyles.fontPoppinsBold,
   },
   cardTxt_body: {
     color: '#666',
-    fontSize: 14,
+    fontSize: mainStyles.textFontSize,
+    fontFamily: mainStyles.fontPoppinsRegular,
     width: 400,
     textAlign: 'center',
     lineHeight: 25,
@@ -139,6 +141,8 @@ const styles = StyleSheet.create({
   },
   btnTxt: {
     color: '#031f0a',
+    fontSize: mainStyles.textFontSize,
+    fontFamily: mainStyles.fontPoppinsRegular,
     paddingTop: 20,
   },
 });

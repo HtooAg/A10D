@@ -1,8 +1,9 @@
-import {FC} from 'react';
+import React, {FC} from 'react';
 import {View, Text, StyleSheet, Dimensions} from 'react-native';
+import { mainStyles } from '../components/MainStyle';
 
 type childType = {
-  children: any;
+  children: React.ReactNode;
 };
 export const screenWidth = Dimensions.get('window').width; // Get screen width
 
@@ -31,7 +32,7 @@ const styles = StyleSheet.create({
   bluePart: {
     position: 'absolute',
     top: -100,
-    backgroundColor: 'blue',
+    backgroundColor: mainStyles.backgroundColor,
     borderTopRightRadius: 0,
     borderTopLeftRadius: 0,
   },

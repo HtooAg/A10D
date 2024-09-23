@@ -13,11 +13,14 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+
 } from 'react-native';
 import {Controller, useForm} from 'react-hook-form';
 import {postRequest} from '../../api/Api';
 import {useDispatch, useSelector} from 'react-redux';
+import {addLoginUser} from '../../features/login/loginSlice';
 import {addRegisterUser} from '../../features/register/RegisterSlice';
+import { mainStyles } from '../../components/MainStyle';
 
 const Login: FC<{navigation: any; spaceId: string}> = ({
   navigation,
@@ -38,6 +41,7 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
 
   const dispatch = useDispatch();
   const RegisterUser = useSelector(state => state.register.registerUser);
+  const loginUser = useSelector(state => state.register.loginUser);
 
   const userEmail = RegisterUser?.email;
   const userPassword = RegisterUser?.password;
@@ -57,10 +61,12 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
           loginData.email === apiResponseData.email &&
           loginData.password === apiResponseData.password
         ) {
+
           navigation.navigate('Home', {
             screen: 'HomeStack',
             params: {
               spaceId: spaceId,
+
               userId: apiResponseData.id,
             },
           });
@@ -80,6 +86,7 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
 
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [isPressed, setIsPressed] = useState(false);
 
   return (
     <View style={styles.card}>
@@ -105,7 +112,13 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
           />
         </View>
         {errors.email && (
-          <Text style={{color: 'red', paddingHorizontal: 10}}>
+          <Text
+            style={{
+              color: 'red',
+              paddingHorizontal: 10,
+              fontSize: 10,
+              fontFamily: mainStyles.fontPoppinsItalic,
+            }}>
             Email is required.
           </Text>
         )}
@@ -129,7 +142,14 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
             )}
             name="password"
           />
-          <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+          <TouchableOpacity
+            onPressIn={() => setIsPressed(true)}
+            onPressOut={() => setIsPressed(false)}
+            onPress={() => setShowPassword(!showPassword)}
+            style={[
+              styles.eye_icon,
+              {backgroundColor: isPressed ? '#000' : '#fff'},
+            ]}>
             {showPassword ? (
               <Eye size={20} color="#000" />
             ) : (
@@ -138,12 +158,33 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
           </TouchableOpacity>
         </View>
         {errors.password && (
-          <Text style={{color: 'red', paddingHorizontal: 10}}>
+          <Text
+            style={{
+              color: 'red',
+              paddingHorizontal: 10,
+              fontSize: 10,
+              fontFamily: mainStyles.fontPoppinsItalic,
+            }}>
             Password is required.
           </Text>
         )}
 
+
         {/* Remember Me */}
+
+        {/* {loginUser.status === 'fail' && (
+          <Text
+            style={{
+              color: 'red',
+              paddingHorizontal: 10,
+              fontSize: 10,
+              fontFamily: mainStyles.fontPoppinsItalic,
+            }}>
+            {loginUser.message}
+          </Text>
+        )} */}
+
+
         <View style={styles.rememberContainer}>
           <TouchableOpacity
             style={styles.checkbox}
@@ -153,14 +194,16 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
           <Text style={styles.rememberText}>Remember me</Text>
         </View>
 
+
         {/* Login Button */}
+
         <TouchableOpacity
           style={styles.loginButton}
           onPress={handleSubmit(onSubmit)}>
           <Text style={styles.loginButtonText}>Login</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
           <Text style={styles.forgotPassword}>Forgot password?</Text>
         </TouchableOpacity>
       </View>
@@ -195,7 +238,13 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 12,
     color: '#000',
-    fontSize: 16,
+    fontSize: mainStyles.textFontSize,
+    fontFamily: mainStyles.fontPoppinsItalic,
+  },
+  eye_icon: {
+    paddingVertical: 5,
+    paddingHorizontal: 5,
+    borderRadius: 25,
   },
   rememberContainer: {
     flexDirection: 'row',
@@ -215,8 +264,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#2563eb',
   },
   rememberText: {
-    fontSize: 14,
+    fontSize: mainStyles.textFontSize,
     color: '#666',
+    fontFamily: mainStyles.fontPoppinsItalic,
   },
   loginButton: {
     backgroundColor: '#2563eb',
@@ -227,12 +277,14 @@ const styles = StyleSheet.create({
   },
   loginButtonText: {
     color: 'white',
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: 15,
+    fontFamily: mainStyles.fontPoppinsSemiBoldItalic,
   },
   forgotPassword: {
     textAlign: 'center',
-    fontSize: 16,
+    fontSize: mainStyles.textFontSize,
+    color: '#000',
+    fontFamily: mainStyles.fontPoppinsItalic,
   },
 });
 
