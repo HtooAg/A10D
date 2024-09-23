@@ -3,18 +3,23 @@ import React, {FC} from 'react';
 import {Text, StyleSheet, View, TouchableOpacity} from 'react-native';
 import Header, {screenWidth} from '../Header';
 import {NavigationType} from '../../type_hint/navType';
-import { Controller, useForm } from 'react-hook-form';
-import { TextInput } from 'react-native-gesture-handler';
+import {Controller, useForm} from 'react-hook-form';
+import {TextInput} from 'react-native-gesture-handler';
+import {mainStyles} from '../../components/MainStyle';
 
 const ForgotPassword: FC<NavigationType> = ({navigation}) => {
+  const {
+    control,
+    handleSubmit,
+    formState: {errors},
+  } = useForm({values: {email: ''}});
 
-  const {control, handleSubmit, formState: {errors}} = useForm({values: {email: ''}})
-
-  const onSubmit = (data) => {
+  const onSubmit = (data: {email: string}) => {
     console.log(data);
-    // call API to send reset password link
-    // navigation.navigate('ResetPassword', {email: data.email});
+    // Call API to send reset password link
+    navigation.navigate('ResetPassword');
   };
+
   return (
     <View style={styles.container}>
       <View
@@ -31,7 +36,7 @@ const ForgotPassword: FC<NavigationType> = ({navigation}) => {
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={styles.iconContainer}>
-          <ArrowLeft color={'#fff'} size={35} />
+          <ArrowLeft color={'#fff'} size={25} />
         </TouchableOpacity>
         <Text style={styles.headerTxt}>Forgot Password</Text>
       </View>
@@ -43,18 +48,18 @@ const ForgotPassword: FC<NavigationType> = ({navigation}) => {
         <Controller
           control={control}
           rules={{
-            required: true,
+            required: 'Email is required',
             validate: value => {
               if (!value.includes('@')) {
                 return 'Please enter a valid email address';
-              }
+              } 
               return true;
             },
           }}
           render={({field: {onChange, onBlur, value}}) => (
             <TextInput
               style={styles.input}
-              placeholder="Password"
+              placeholder="Email"
               placeholderTextColor="#000"
               onBlur={onBlur}
               onChangeText={onChange}
@@ -64,7 +69,16 @@ const ForgotPassword: FC<NavigationType> = ({navigation}) => {
           )}
           name="email"
         />
-        {errors?.email && <Text style={{color: 'red'}}>{errors.email.message}</Text>}
+        {errors?.email && (
+          <Text
+            style={{
+              color: 'red',
+              fontSize: mainStyles.textFontSize,
+              fontFamily: mainStyles.fontPoppinsItalic,
+            }}>
+            {errors.email.message}
+          </Text>
+        )}
         <TouchableOpacity
           style={styles.button}
           onPress={handleSubmit(onSubmit)}>
@@ -93,7 +107,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    marginTop: 40, // Margin to adjust header position below bluePart
+    flex: 0.3, // Header now takes less space
   },
   iconContainer: {
     position: 'absolute',
@@ -101,36 +115,41 @@ const styles = StyleSheet.create({
   },
   headerTxt: {
     color: '#fff',
-    fontWeight: 'bold',
+    fontFamily: mainStyles.fontPoppinsBold,
     fontSize: 25,
     letterSpacing: 1,
-    top: screenWidth / 4,
-    left: screenWidth / 4,
+    top: screenWidth / 3, // Adjusted based on screen size
+    left: screenWidth/5
   },
   card: {
-    flex: 5,
+    flex: 5, // Card takes more space now
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
   },
   cardTxt_header: {
     color: '#666',
-    fontSize: 18,
-    width: 300,
+    width: 350,
     textAlign: 'center',
-    fontWeight: '500',
+    fontSize: 18,
+    fontFamily: mainStyles.fontPoppinsRegular,
     marginBottom: 10,
   },
   input: {
-    flex: 1,
     paddingVertical: 12,
+    paddingHorizontal: 10,
+    borderRadius: 8,
     color: '#000',
-    fontSize: 16,
+    fontSize: mainStyles.textFontSize,
+    fontFamily: mainStyles.fontPoppinsItalic,
+    width: 350,
+    marginVertical: 10,
+    backgroundColor: '#e3e3e3',
   },
   button: {
-    backgroundColor: '#2563eb',
+    backgroundColor: mainStyles.backgroundColor,
     borderRadius: 12,
-    paddingVertical: 16,
+    paddingVertical: 10,
     marginTop: 20,
     width: 200,
     alignItems: 'center',
@@ -138,6 +157,7 @@ const styles = StyleSheet.create({
   buttonTxt: {
     color: '#fff',
     fontSize: 18,
+    fontFamily: mainStyles.fontPoppinsItalic,
   },
 });
 

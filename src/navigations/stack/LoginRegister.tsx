@@ -14,7 +14,7 @@ import {
 
 import Login from './Login';
 import Register from './Register';
-import Header from '../Header';
+import Header, { screenWidth } from '../Header';
 import {FC, useState} from 'react';
 import {ArrowLeft} from 'lucide-react-native';
 import {NavigationType} from '../../type_hint/navType';
@@ -49,7 +49,7 @@ const LoginRegister: FC<NavigationType> = ({navigation, route}) => {
                   },
                 ]}
               />
-              <View style={{...styles.topStyle, top: screenWidth / 15}}>
+              <View style={{...styles.topStyle, top: screenWidth / 20}}>
                 <TouchableOpacity
                   onPress={() => {
                     navigation.navigate('SpaceId');
@@ -57,6 +57,7 @@ const LoginRegister: FC<NavigationType> = ({navigation, route}) => {
                   style={{
                     ...styles.buttonStyle,
                     right: (screenWidth / 10) * 4,
+                    top: screenWidth / 30,
                   }}>
                   <ArrowLeft size={28} color="#fff" />
                 </TouchableOpacity>
@@ -65,6 +66,7 @@ const LoginRegister: FC<NavigationType> = ({navigation, route}) => {
                   style={{
                     ...styles.headerTitle,
                     right: screenWidth / 4.5,
+                    top: screenWidth/10,
                     fontFamily: mainStyles.fontPoppinsRegular,
                   }}>
                   {isToggle ? 'Login' : 'Register'}
@@ -124,7 +126,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#e3e3e3',
-    position: 'relative',
+    // position: 'relative',
     alignItems: 'center',
   },
   topStyle: {
