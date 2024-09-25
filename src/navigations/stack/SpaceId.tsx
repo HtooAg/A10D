@@ -12,9 +12,12 @@ import SelectDropdown from 'react-native-select-dropdown';
 import {ChevronDown, ChevronUp} from 'lucide-react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {NavigationType} from '../../type_hint/navType';
-import { mainStyles } from '../../components/MainStyle';
+import {mainStyles} from '../../components/MainStyle';
+import { useDispatch } from 'react-redux';
+import { addSpaceId } from '../../features/space/space_id';
 
 const SpaceId: FC<NavigationType> = ({navigation}) => {
+  const dispatch = useDispatch()
   const screenWidth = Dimensions.get('window').width;
   const [customInput, setCustomInput] = useState('');
   const {
@@ -29,15 +32,26 @@ const SpaceId: FC<NavigationType> = ({navigation}) => {
     },
   });
 
+  const emojisWithIcons = [
+    {index: 1, title: 'Xan'},
+    {index: 2, title: 'BI3'},
+    {index: 3, title: 'Kirin Engineering Co.,Ltd.'},
+    {index: 4, title: 'Demo'},
+    {index: 5, title: 'Demo123'},
+    {index: 6, title: 'Test'},
+    {index: 7, title: 'LOGCDC'},
+    {index: 8, title: 'Testing space'},
+  ];
 
-  const emojisWithIcons = [{index: 7, title: 'LOGCDC'}];
-
-
-  const onSubmit = (data) => {
-    navigation.navigate('Login', {spaceId: data.spaceName.index, spaceName: data.spaceName.title});
-    console.log(data)
-  }
-
+const onSubmit = data => {
+  const selectedSpace = data.spaceName; // spaceName is the selected dropdown item
+  dispatch(addSpaceId(selectedSpace.title));
+  navigation.navigate('Login', {
+    spaceId: selectedSpace.index, // Correct way to access index and title
+    spaceName: selectedSpace.title,
+  });
+  console.log(selectedSpace);
+};
 
   return (
     <View style={styles.container}>

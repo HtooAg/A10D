@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   TextInput,
   Alert,
-  Button,
 } from 'react-native';
 import {
   Eye,
@@ -15,20 +14,15 @@ import {
   User,
   Fingerprint,
   Phone,
-  AlertTriangle,
 } from 'lucide-react-native';
 import {Controller, useForm} from 'react-hook-form';
 import {NavigationType} from '../../type_hint/navType';
 import {FC, useState} from 'react';
 import {postRequest} from '../../api/Api';
-import {
-  ALERT_TYPE,
-  Dialog,
-  AlertNotificationRoot,
-  Toast,
-} from 'react-native-alert-notification';
+import {ALERT_TYPE, Toast} from 'react-native-alert-notification';
 import {useDispatch, useSelector} from 'react-redux';
 import {addRegisterUser} from '../../features/register/RegisterSlice';
+import Loading from '../../components/Loading';
 
 type RegisterData = {
   name: string;
@@ -39,7 +33,7 @@ type RegisterData = {
   phoneNo: string;
 };
 
-const Register: FC<NavigationType> = ({navigation, spaceId}) => {
+const Register: FC<NavigationType> = ({navigation, spaceId, setLoading}) => {
   const {
     control,
     handleSubmit,
@@ -62,17 +56,24 @@ const Register: FC<NavigationType> = ({navigation, spaceId}) => {
   const dispatch = useDispatch();
   const RegisterUser = useSelector(state => state.register.registerUser);
 
-  console.log(RegisterUser);
+  console.log('Register User Data: ', RegisterUser);
+  console.log('Navigation prop:', navigation);
+
   const onSubmit = async (registerData: RegisterData) => {
     console.log(registerData);
     try {
+      setTimeout(() => {
+        setLoading(false);
+      }, 3000);
       const response = await postRequest(
         '/api/v1/users/register',
         registerData,
       );
+      setLoading(true);
+      navigation.navigate('Login');
 
-      dispatch(addRegisterUser(response.config.data));
-      console.log(response);
+      dispatch(addRegisterUser(response.data.data));
+      console.log(response.data);
 
       if (response.data.status === 'fail') {
         Toast.show({
@@ -84,7 +85,7 @@ const Register: FC<NavigationType> = ({navigation, spaceId}) => {
         Toast.show({
           type: ALERT_TYPE.SUCCESS,
           title: 'Success',
-          textBody: 'Register successful!',
+          textBody: response.data.message,
         });
       }
       reset({
@@ -95,8 +96,12 @@ const Register: FC<NavigationType> = ({navigation, spaceId}) => {
         staffid: '',
         phoneNo: '',
       });
-      // navigation.navigate('Home');
     } catch (error) {
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: 'Error',
+        textBody: 'Registration failed. Please try again later.',
+      });
       console.error('Error during registration:', error);
     }
   };
@@ -168,7 +173,9 @@ const Register: FC<NavigationType> = ({navigation, spaceId}) => {
           <Mail size={20} color="#000" style={styles.inputIcon} />
           <Controller
             control={control}
-            rules={{required: true}}
+            rules={{
+              required: true,
+            }}
             render={({field: {onChange, onBlur, value}}) => (
               <TextInput
                 style={styles.input}
@@ -223,7 +230,15 @@ const Register: FC<NavigationType> = ({navigation, spaceId}) => {
           <Fingerprint size={20} color="#000" style={styles.inputIcon} />
           <Controller
             control={control}
-            rules={{required: true}}
+            rules={{
+              required: true,
+              validate: value => {
+                if (RegisterUser?.staffid === value) {
+                  Alert.alert('Alert', 'StaffID already exists');
+                }
+                return true;
+              },
+            }}
             render={({field: {onChange, onBlur, value}}) => (
               <TextInput
                 style={styles.input}

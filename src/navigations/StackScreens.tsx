@@ -4,9 +4,11 @@ import SpaceId from './stack/SpaceId';
 import LoginRegister from './stack/LoginRegister';
 import ForgotPassword from './stack/ForgotPassword';
 import ResetPassword from './stack/ResetPassword';
+import ResetScreen from './stack/ResetScreen';
 
 const StackScreens = () => {
   const Stack = createNativeStackNavigator();
+
   return (
     <Stack.Navigator initialRouteName="SpaceId">
       <Stack.Screen
@@ -27,6 +29,11 @@ const StackScreens = () => {
       <Stack.Screen
         name="ResetPassword"
         component={ResetPassword}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ResetScreen"
+        component={ResetScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

@@ -16,15 +16,25 @@ import {
 
 } from 'react-native';
 import {Controller, useForm} from 'react-hook-form';
-import {postRequest} from '../../api/Api';
+import {singleRequest, postRequest} from '../../api/Api';
 import {useDispatch, useSelector} from 'react-redux';
 import {addLoginUser} from '../../features/login/loginSlice';
 import {addRegisterUser} from '../../features/register/RegisterSlice';
 import { mainStyles } from '../../components/MainStyle';
 
+
+type LoginData = {
+  
+  email: string;
+  password: string;
+  space_id: number;
+  
+};
+
 const Login: FC<{navigation: any; spaceId: string}> = ({
   navigation,
   spaceId,
+  setLoading
 }) => {
   const {
     control,
@@ -39,50 +49,52 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
     },
   });
 
+
+
   const dispatch = useDispatch();
   const RegisterUser = useSelector(state => state.register.registerUser);
-  const loginUser = useSelector(state => state.register.loginUser);
+  const loginUser = useSelector(state => state.login.loginUser);
 
   const userEmail = RegisterUser?.email;
   const userPassword = RegisterUser?.password;
 
-  console.log('Register User:', userEmail);
+  // console.log('Register User:', userEmail);
+  console.log('Login User:', loginUser);
 
-  const onSubmit = async loginData => {
-    try {
-      const fetchAPI = await postRequest('/api/v1/users/user-login', loginData);
-      const apiResponseData = fetchAPI?.data;
 
-      if (apiResponseData) {
-        dispatch(addRegisterUser(apiResponseData));
+ const onSubmit = async (loginData: LoginData) => {
+   try {
+     setLoading(true);
 
-        // Navigate to Home if login is successful
-        if (
-          loginData.email === apiResponseData.email &&
-          loginData.password === apiResponseData.password
-        ) {
+     const fetchAPI = await singleRequest(
+       `/api/v1/users/user-login?space-id=${loginData.space_id}&email=${loginData.email}&password=${loginData.password}`,
+     );
 
-          navigation.navigate('Home', {
-            screen: 'HomeStack',
-            params: {
-              spaceId: spaceId,
+     console.log('Login Data: ', fetchAPI.data);
+     dispatch(addLoginUser(fetchAPI.data.data || fetchAPI.data));
 
-              userId: apiResponseData.id,
-            },
-          });
-        }
-      }
+     if (fetchAPI.data.status === 'success') {
+       navigation.navigate('Home', {
+         screen: 'HomeStack',
+         params: {
+           user: loginUser.user,
+           token: loginUser.token,
+         },
+       });
+     }
 
-      reset({
-        email: '',
-        password: '',
-        space_id: spaceId,
-      });
-    } catch (error) {
-      console.log('Failed to login:', error);
-      // You can display an error message to the user here
-    }
-  };
+     reset({
+       email: '',
+       password: '',
+       space_id: spaceId,
+     });
+   } catch (error) {
+     console.log('Failed to login:', error);
+   } finally {
+     setLoading(false);
+   }
+ };
+
 
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -169,10 +181,9 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
           </Text>
         )}
 
-
         {/* Remember Me */}
 
-        {/* {loginUser.status === 'fail' && (
+        {loginUser?.status === 'fail' && (
           <Text
             style={{
               color: 'red',
@@ -180,20 +191,20 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
               fontSize: 10,
               fontFamily: mainStyles.fontPoppinsItalic,
             }}>
-            {loginUser.message}
+            {loginUser?.message}
           </Text>
-        )} */}
-
+        )}
 
         <View style={styles.rememberContainer}>
           <TouchableOpacity
             style={styles.checkbox}
             onPress={() => setRememberMe(!rememberMe)}>
-            {rememberMe && <Check size={20} color="#fff" />}
+            {rememberMe && (
+              <Check size={20} color="#fff" style={{backgroundColor: 'blue'}} />
+            )}
           </TouchableOpacity>
           <Text style={styles.rememberText}>Remember me</Text>
         </View>
-
 
         {/* Login Button */}
 
@@ -261,7 +272,6 @@ const styles = StyleSheet.create({
     marginRight: 8,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#2563eb',
   },
   rememberText: {
     fontSize: mainStyles.textFontSize,

@@ -4,7 +4,12 @@ import {screenWidth} from '../Header';
 import {AlignLeft, User2} from 'lucide-react-native';
 import { NavigationType } from '../../type_hint/navType';
 import { mainStyles } from '../../components/MainStyle';
+import { useSelector } from 'react-redux';
 const User: React.FC<NavigationType> = ({navigation}) => {
+
+  const loginUser = useSelector(state => state.login.loginUser);
+
+  console.log('User Info: ', loginUser);
   return (
     <View style={styles.container}>
       <View
@@ -29,19 +34,19 @@ const User: React.FC<NavigationType> = ({navigation}) => {
         </View>
         <View style={styles.headerCard}>
           <User2 color={'#e3e3e3'} size={'40%'} />
-          <Text style={styles.headerCardText}>Name: </Text>
-          <Text style={styles.headerCardSubText}>Email: </Text>
+          <Text style={styles.headerCardText}>{loginUser.user.name}</Text>
+          <Text style={styles.headerCardSubText}>{loginUser.user.email}</Text>
         </View>
       </View>
       <View style={{flex: 1}}>
         <View style={styles.card}>
           <View>
             <Text style={styles.cardTxt}>Staff Id</Text>
-            <Text style={styles.cardTxt}>0000</Text>
+            <Text style={styles.cardTxt}>{loginUser.user.staff_id}</Text>
           </View>
           <View>
             <Text style={styles.cardTxt}>Space Name</Text>
-            <Text style={styles.cardTxt}>LOGCDC</Text>
+            <Text style={styles.cardTxt}>{loginUser.user.staff_id}</Text>
           </View>
         </View>
       </View>
