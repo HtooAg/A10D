@@ -1,7 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 const spaceSlice = createSlice({
-  name: 'space_id',
+  name: 'spaceId',
   initialState: {
     spaceUser: {},
   },

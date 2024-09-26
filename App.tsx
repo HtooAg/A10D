@@ -7,14 +7,13 @@ import {useState, useEffect} from 'react';
 import Orientation from 'react-native-orientation-locker';
 import SplashScreen from './src/components/SplashScreen';
 import StartScreenStack from './src/navigations/StartScreenStack';
-import {Provider} from 'react-redux';
+import { Provider } from 'react-redux';
 import {store, persistor} from './src/store/Store';
 import {PersistGate} from 'redux-persist/integration/react'; // Correct import path for PersistGate
 import {AlertNotificationRoot} from 'react-native-alert-notification';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 
-const queryClient = new QueryClient();
+
 
 export default function App() {
   const Stack = createNativeStackNavigator();

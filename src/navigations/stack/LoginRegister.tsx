@@ -34,9 +34,9 @@ const LoginRegister: FC<NavigationType> = ({navigation, route}) => {
 
   console.log(
     'Space ID:',
-    spaceUser?.spaceId,
+    spaceUser?.index,
     'Space Name:',
-    spaceUser?.spaceName,
+    spaceUser?.title,
   );
 
   return (
@@ -121,12 +121,12 @@ const LoginRegister: FC<NavigationType> = ({navigation, route}) => {
                 {isToggle ? (
                   <Login
                     navigation={navigation}
-                    spaceId={spaceUser?.spaceId}
+                    spaceId={spaceUser?.index}
                     setLoading={setLoading}
                   />
                 ) : (
                   <Register
-                    spaceId={spaceUser?.spaceId}
+                    spaceId={spaceUser?.index}
                     navigation={navigation}
                     setLoading={setLoading}
                   />
