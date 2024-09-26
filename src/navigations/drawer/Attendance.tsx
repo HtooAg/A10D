@@ -18,6 +18,7 @@ import {
 } from 'react-native';
 import {NavigationType} from '../../type_hint/navType';
 import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
+import { mainStyles } from '../../components/MainStyle';
 
 const Attendance: React.FC<NavigationType> = ({navigation}) => {
   const [showCalander, setShowCalander] = useState(false);
@@ -43,22 +44,44 @@ const Attendance: React.FC<NavigationType> = ({navigation}) => {
         <TouchableOpacity>
           <ChevronLeft color={'#fff'} />
         </TouchableOpacity>
-        <Text>Month,0000</Text>
+        <Text
+          style={{fontFamily: mainStyles.fontPoppinsRegular, color: '#e3e3e3'}}>
+          Month,0000
+        </Text>
         <TouchableOpacity>
           <ChevronRight color={'#fff'} />
         </TouchableOpacity>
       </View>
       <View style={styles.cardWithAtt}>
         <View style={styles.cardWithAtt_item}>
-          <Text style={{color: '#000', paddingStart: 15}}>0000-00-00</Text>
+          <Text
+            style={{
+              color: '#000',
+              paddingStart: 15,
+              fontFamily: mainStyles.fontPoppinsRegular,
+            }}>
+            0000-00-00
+          </Text>
           <TouchableOpacity
             onPress={() => navigation.navigate('AttendanceDetail')}>
             <ChevronRight color={'#000'} size={35} />
           </TouchableOpacity>
         </View>
         <View style={{...styles.card, width: '85%'}}>
-          <Text>Month,0000</Text>
-          <Text>Month,0000</Text>
+          <Text
+            style={{
+              fontFamily: mainStyles.fontPoppinsRegular,
+              color: '#e3e3e3',
+            }}>
+            Month,0000
+          </Text>
+          <Text
+            style={{
+              fontFamily: mainStyles.fontPoppinsRegular,
+              color: '#e3e3e3',
+            }}>
+            Month,0000
+          </Text>
         </View>
       </View>
       <View style={styles.cardNoAtt}>
@@ -75,15 +98,21 @@ const Attendance: React.FC<NavigationType> = ({navigation}) => {
         ) : (
           <>
             <ClipboardPenLine color={'#ccc'} size={150} strokeWidth={0.2} />
-            <Text style={{color: '#000', fontSize: 15}}>
+            <Text
+              style={{
+                color: '#000',
+                fontSize: mainStyles.textFontSize,
+                fontFamily: mainStyles.fontPoppinsRegular,
+              }}>
               There is no attendance records
             </Text>
             <Text
               style={{
                 color: '#ccc',
-                fontSize: 15,
+                fontSize: mainStyles.textFontSize,
                 width: '70%',
                 textAlign: 'center',
+                fontFamily: mainStyles.fontPoppinsRegular,
               }}>
               The record will be display according to the check in/out process
             </Text>
@@ -102,12 +131,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingTop: 15,
-    paddingLeft: 25,
   },
   headerTxt: {
     color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 25,
+    fontSize: mainStyles.navFontSize,
+    fontFamily: mainStyles.fontPoppinsBold,
     letterSpacing: 1,
   },
   card: {

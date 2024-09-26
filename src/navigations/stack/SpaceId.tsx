@@ -12,8 +12,12 @@ import SelectDropdown from 'react-native-select-dropdown';
 import {ChevronDown, ChevronUp} from 'lucide-react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {NavigationType} from '../../type_hint/navType';
+import {mainStyles} from '../../components/MainStyle';
+import { useDispatch } from 'react-redux';
+import { addSpaceId } from '../../features/space/space_id';
 
 const SpaceId: FC<NavigationType> = ({navigation}) => {
+  const dispatch = useDispatch()
   const screenWidth = Dimensions.get('window').width;
   const [customInput, setCustomInput] = useState('');
   const {
@@ -23,26 +27,31 @@ const SpaceId: FC<NavigationType> = ({navigation}) => {
     reset,
     setValue,
   } = useForm({
-    defaultValues: {
+    values: {
       spaceName: '',
     },
   });
 
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     reset({spaceName: 'Space name'});
-  //   }, [reset]),
-  // );
-
-  const onSubmit = (data) => {
-    
-    navigation.navigate('Login', {spaceId: data.spaceName});
-  };
-
   const emojisWithIcons = [
-    {title: 2},
-    
+    {index: 1, title: 'Xan'},
+    {index: 2, title: 'BI3'},
+    {index: 3, title: 'Kirin Engineering Co.,Ltd.'},
+    {index: 4, title: 'Demo'},
+    {index: 5, title: 'Demo123'},
+    {index: 6, title: 'Test'},
+    {index: 7, title: 'LOGCDC'},
+    {index: 8, title: 'Testing space'},
   ];
+
+const onSubmit = data => {
+  const selectedSpace = data.spaceName; // spaceName is the selected dropdown item
+  dispatch(addSpaceId(selectedSpace.title));
+  navigation.navigate('Login', {
+    spaceId: selectedSpace.index, // Correct way to access index and title
+    spaceName: selectedSpace.title,
+  });
+  console.log(selectedSpace);
+};
 
   return (
     <View style={styles.container}>
@@ -72,7 +81,7 @@ const SpaceId: FC<NavigationType> = ({navigation}) => {
           control={control}
           rules={{
             validate: value => {
-               if (!value) {
+              if (!value) {
                 return 'Space name is required';
               }
               return true;
@@ -82,7 +91,7 @@ const SpaceId: FC<NavigationType> = ({navigation}) => {
           render={({field: {onChange, value}}) => (
             <SelectDropdown
               data={emojisWithIcons}
-              onSelect={selectedItem => onChange(selectedItem.title)}
+              onSelect={selectedItem => onChange(selectedItem)}
               renderButton={(selectedItem, isOpened) => (
                 <View style={styles.dropdownButtonStyle}>
                   {selectedItem ? (
@@ -149,7 +158,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     color: '#fff',
-    fontWeight: '500',
+    fontFamily: mainStyles.fontPoppinsBold,
     letterSpacing: 2,
     fontSize: 26,
     width: 200,
@@ -157,6 +166,7 @@ const styles = StyleSheet.create({
   btnTxt: {
     color: '#fff',
     fontSize: 18,
+    fontFamily: mainStyles.fontPoppinsBold,
     textDecorationLine: 'underline',
   },
   dropdownButtonStyle: {
@@ -172,7 +182,7 @@ const styles = StyleSheet.create({
   dropdownButtonTxtStyle: {
     flex: 1,
     fontSize: 18,
-    fontWeight: '500',
+    fontFamily: mainStyles.fontPoppinsRegular,
     color: '#000',
   },
   dropdownMenuStyle: {
@@ -190,12 +200,13 @@ const styles = StyleSheet.create({
   dropdownItemTxtStyle: {
     flex: 1,
     fontSize: 18,
-    fontWeight: '500',
+    fontFamily: mainStyles.fontPoppinsRegular,
     color: '#151E26',
   },
   textInput: {
     flex: 1,
     color: '#151E26',
+    fontFamily: mainStyles.fontPoppinsRegular,
   },
 });
 

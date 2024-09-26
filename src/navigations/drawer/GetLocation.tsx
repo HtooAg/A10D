@@ -38,6 +38,7 @@ const getLocation = (): Promise<{
   deviceLatitude: number;
   deviceLongitude: number;
 }> => {
+  
   return new Promise((resolve, reject) => {
     Geolocation.getCurrentPosition(
       position => {
@@ -51,6 +52,7 @@ const getLocation = (): Promise<{
       {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
     );
   });
+
 };
 
 const GetLocation = async (

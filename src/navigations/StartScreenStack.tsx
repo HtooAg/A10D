@@ -1,27 +1,26 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Space } from 'lucide-react-native';
-import React, { Component } from 'react'
-import { Text, View } from 'react-native'
-import SpaceId from './stack/SpaceId';
-import LoginRegister from './stack/LoginRegister';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import React from 'react';
+import DrawerApp from './DrawerApp';
+import StackScreens from './StackScreens';
 
 const StartScreenStack = () => {
-    const Stack = createNativeStackNavigator();
-    return (
-      <Stack.Navigator initialRouteName="SpaceId">
-        <Stack.Screen
-          name="SpaceId"
-          component={SpaceId}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="Login"
-          component={LoginRegister}
-          options={{headerShown: false}}
-        />
-        
-      </Stack.Navigator>
-    );
-}
+  const Stack = createNativeStackNavigator();
 
-export default StartScreenStack
+  return (
+    <Stack.Navigator initialRouteName="StackScreen">
+      <Stack.Screen
+        name="StackScreen"
+        component={StackScreens}
+        options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name="Home"
+        component={DrawerApp}
+        options={{headerShown: false}}
+      />
+    </Stack.Navigator>
+  );
+};
+
+export default StartScreenStack;

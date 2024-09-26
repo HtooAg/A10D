@@ -1,11 +1,13 @@
-import {FC} from 'react';
+import React, {FC} from 'react';
 import {View, Text, StyleSheet, Dimensions} from 'react-native';
+import { mainStyles } from '../components/MainStyle';
 
 type childType = {
-  children: any;
+  children: React.ReactNode;
 };
+export const screenWidth = Dimensions.get('window').width; // Get screen width
+
 const Header: FC<childType> = ({children}) => {
-  const screenWidth = Dimensions.get('window').width; // Get screen width
   return (
     <View style={styles.container}>
       <View
@@ -16,8 +18,9 @@ const Header: FC<childType> = ({children}) => {
             height: screenWidth,
             borderRadius: (screenWidth * 2) / 2,
           },
-        ]}/>
-        {children}
+        ]}
+      />
+      {children}
     </View>
   );
 };
@@ -29,7 +32,7 @@ const styles = StyleSheet.create({
   bluePart: {
     position: 'absolute',
     top: -100,
-    backgroundColor: 'blue',
+    backgroundColor: mainStyles.backgroundColor,
     borderTopRightRadius: 0,
     borderTopLeftRadius: 0,
   },

@@ -1,17 +1,22 @@
-import { StyleSheet, SafeAreaView, StatusBar } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import LoginRegister from './src/navigations/stack/LoginRegister';
-import SpaceId from './src/navigations/stack/SpaceId';
-import ContextProvider from './src/components/Context';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { useState, useEffect } from 'react';
+import {StyleSheet, SafeAreaView, StatusBar} from 'react-native';
+import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {CustomProvider} from './src/components/Context'; // Correctly import the CustomProvider
+import {createDrawerNavigator} from '@react-navigation/drawer';
+import {useState, useEffect} from 'react';
 import Orientation from 'react-native-orientation-locker';
-import DrawerApp from './src/navigations/DrawerApp';
 import SplashScreen from './src/components/SplashScreen';
 import StartScreenStack from './src/navigations/StartScreenStack';
+import {Provider} from 'react-redux';
+import {store, persistor} from './src/store/Store';
+import {PersistGate} from 'redux-persist/integration/react'; // Correct import path for PersistGate
+import {AlertNotificationRoot} from 'react-native-alert-notification';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
+
 export default function App() {
-  const Drawer = createDrawerNavigator();
   const Stack = createNativeStackNavigator();
   const [isLogin, setIsLogin] = useState(false);
   const [changeDevice, setChangeDevice] = useState(false);
@@ -31,38 +36,29 @@ export default function App() {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor="#0032fc" />
-      <NavigationContainer>
-        <ContextProvider.Provider
-          value={{
-            isLogin,
-            setIsLogin,
-            changeDevice,
-            setChangeDevice,
-            changeModal,
-            setChangeModal,
-            emailModalVisible,
-            setEmailModalVisible,
-            callModalVisible,
-            setCallModalVisible,
-          }}>
-          {showSplash ? (
-            <SplashScreen />
-          ) : (
-            <Stack.Navigator>
-              <Stack.Screen
-                name="SpaceId"
-                component={StartScreenStack}
-                options={{headerShown: false}}
-              />
-              <Stack.Screen
-                name="DrawerApp"
-                component={DrawerApp}
-                options={{headerShown: false}}
-              />
-            </Stack.Navigator>
-          )}
-        </ContextProvider.Provider>
-      </NavigationContainer>
+      <Provider store={store}>
+        <PersistGate persistor={persistor}>
+          <GestureHandlerRootView style={{flex: 1}}>
+            <AlertNotificationRoot>
+              <NavigationContainer theme={DefaultTheme}>
+                <CustomProvider>
+                  {showSplash ? (
+                    <SplashScreen />
+                  ) : (
+                    <Stack.Navigator>
+                      <Stack.Screen
+                        name="App"
+                        component={StartScreenStack}
+                        options={{headerShown: false}}
+                      />
+                    </Stack.Navigator>
+                  )}
+                </CustomProvider>
+              </NavigationContainer>
+            </AlertNotificationRoot>
+          </GestureHandlerRootView>
+        </PersistGate>
+      </Provider>
     </SafeAreaView>
   );
 }

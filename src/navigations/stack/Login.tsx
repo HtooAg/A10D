@@ -6,52 +6,162 @@ import {
   EyeOff,
   Check,
 } from 'lucide-react-native';
-import React, {FC, useContext, useState} from 'react';
+import React, {FC, useState} from 'react';
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  SafeAreaView,
-  KeyboardAvoidingView,
-} from 'react-native';
-import Header from '../Header';
-import {NavigationType} from '../../type_hint/navType';
-import ContextProvider from '../../components/Context';
 
-const Login: FC<{navigation: any}> = ({navigation}) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+} from 'react-native';
+import {Controller, useForm} from 'react-hook-form';
+import {singleRequest, postRequest} from '../../api/Api';
+import {useDispatch, useSelector} from 'react-redux';
+import {addLoginUser} from '../../features/login/loginSlice';
+import {addRegisterUser} from '../../features/register/RegisterSlice';
+import { mainStyles } from '../../components/MainStyle';
+
+
+type LoginData = {
+  
+  email: string;
+  password: string;
+  space_id: number;
+  
+};
+
+const Login: FC<{navigation: any; spaceId: string}> = ({
+  navigation,
+  spaceId,
+  setLoading
+}) => {
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: {errors},
+  } = useForm({
+    defaultValues: {
+      space_id: spaceId,
+      email: '',
+      password: '',
+    },
+  });
+
+
+
+  const dispatch = useDispatch();
+  const RegisterUser = useSelector(state => state.register.registerUser);
+  const loginUser = useSelector(state => state.login.loginUser);
+
+  const userEmail = RegisterUser?.email;
+  const userPassword = RegisterUser?.password;
+
+  // console.log('Register User:', userEmail);
+  console.log('Login User:', loginUser);
+
+
+ const onSubmit = async (loginData: LoginData) => {
+   try {
+     setLoading(true);
+
+     const fetchAPI = await singleRequest(
+       `/api/v1/users/user-login?space-id=${loginData.space_id}&email=${loginData.email}&password=${loginData.password}`,
+     );
+
+     console.log('Login Data: ', fetchAPI.data);
+     dispatch(addLoginUser(fetchAPI.data.data || fetchAPI.data));
+
+     if (fetchAPI.data.status === 'success') {
+       navigation.navigate('Home', {
+         screen: 'HomeStack',
+         params: {
+           user: loginUser.user,
+           token: loginUser.token,
+         },
+       });
+     }
+
+     reset({
+       email: '',
+       password: '',
+       space_id: spaceId,
+     });
+   } catch (error) {
+     console.log('Failed to login:', error);
+   } finally {
+     setLoading(false);
+   }
+ };
+
+
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const {setIsLogin} = useContext(ContextProvider);
+  const [isPressed, setIsPressed] = useState(false);
+
   return (
     <View style={styles.card}>
       <View style={{marginTop: 20}}>
+        {/* Email Input */}
         <View style={styles.inputContainer}>
           <Mail size={20} color="#000" style={styles.inputIcon} />
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            placeholderTextColor="#000"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
+          <Controller
+            control={control}
+            rules={{required: true}}
+            render={({field: {onChange, onBlur, value}}) => (
+              <TextInput
+                style={styles.input}
+                placeholder="Email"
+                placeholderTextColor="#000"
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                keyboardType="email-address"
+              />
+            )}
+            name="email"
           />
         </View>
+        {errors.email && (
+          <Text
+            style={{
+              color: 'red',
+              paddingHorizontal: 10,
+              fontSize: 10,
+              fontFamily: mainStyles.fontPoppinsItalic,
+            }}>
+            Email is required.
+          </Text>
+        )}
 
+        {/* Password Input */}
         <View style={styles.inputContainer}>
           <LockIcon size={20} color="#000" style={styles.inputIcon} />
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            placeholderTextColor="#000"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry={!showPassword}
+          <Controller
+            control={control}
+            rules={{required: true}}
+            render={({field: {onChange, onBlur, value}}) => (
+              <TextInput
+                style={styles.input}
+                placeholder="Password"
+                placeholderTextColor="#000"
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                secureTextEntry={!showPassword}
+              />
+            )}
+            name="password"
           />
-          <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+          <TouchableOpacity
+            onPressIn={() => setIsPressed(true)}
+            onPressOut={() => setIsPressed(false)}
+            onPress={() => setShowPassword(!showPassword)}
+            style={[
+              styles.eye_icon,
+              {backgroundColor: isPressed ? '#000' : '#fff'},
+            ]}>
             {showPassword ? (
               <Eye size={20} color="#000" />
             ) : (
@@ -59,24 +169,53 @@ const Login: FC<{navigation: any}> = ({navigation}) => {
             )}
           </TouchableOpacity>
         </View>
+        {errors.password && (
+          <Text
+            style={{
+              color: 'red',
+              paddingHorizontal: 10,
+              fontSize: 10,
+              fontFamily: mainStyles.fontPoppinsItalic,
+            }}>
+            Password is required.
+          </Text>
+        )}
+
+        {/* Remember Me */}
+
+        {loginUser?.status === 'fail' && (
+          <Text
+            style={{
+              color: 'red',
+              paddingHorizontal: 10,
+              fontSize: 10,
+              fontFamily: mainStyles.fontPoppinsItalic,
+            }}>
+            {loginUser?.message}
+          </Text>
+        )}
 
         <View style={styles.rememberContainer}>
           <TouchableOpacity
             style={styles.checkbox}
             onPress={() => setRememberMe(!rememberMe)}>
-            {rememberMe && <Check size={20} color="#fff" />}
+            {rememberMe && (
+              <Check size={20} color="#fff" style={{backgroundColor: 'blue'}} />
+            )}
           </TouchableOpacity>
           <Text style={styles.rememberText}>Remember me</Text>
         </View>
 
+        {/* Login Button */}
+
         <TouchableOpacity
           style={styles.loginButton}
-          onPress={() => navigation.navigate('DrawerApp')}>
+          onPress={handleSubmit(onSubmit)}>
           <Text style={styles.loginButtonText}>Login</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity>
-          <Text style={styles.forgotPassword}>forgot password?</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
+          <Text style={styles.forgotPassword}>Forgot password?</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -94,7 +233,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: '20%',
   },
-
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -111,7 +249,13 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 12,
     color: '#000',
-    fontSize: 16,
+    fontSize: mainStyles.textFontSize,
+    fontFamily: mainStyles.fontPoppinsItalic,
+  },
+  eye_icon: {
+    paddingVertical: 5,
+    paddingHorizontal: 5,
+    borderRadius: 25,
   },
   rememberContainer: {
     flexDirection: 'row',
@@ -128,11 +272,11 @@ const styles = StyleSheet.create({
     marginRight: 8,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#2563eb',
   },
   rememberText: {
-    fontSize: 14,
+    fontSize: mainStyles.textFontSize,
     color: '#666',
+    fontFamily: mainStyles.fontPoppinsItalic,
   },
   loginButton: {
     backgroundColor: '#2563eb',
@@ -143,12 +287,14 @@ const styles = StyleSheet.create({
   },
   loginButtonText: {
     color: 'white',
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: 15,
+    fontFamily: mainStyles.fontPoppinsSemiBoldItalic,
   },
   forgotPassword: {
     textAlign: 'center',
-    fontSize: 16,
+    fontSize: mainStyles.textFontSize,
+    color: '#000',
+    fontFamily: mainStyles.fontPoppinsItalic,
   },
 });
 

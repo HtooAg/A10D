@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Animated, StyleSheet, Text, View, Easing} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import { mainStyles } from './MainStyle';
 
 const SplashScreen = () => {
   const rotateValue = useRef(new Animated.Value(0)).current;
@@ -149,7 +150,7 @@ const styles = StyleSheet.create({
     letterSpacing: 2,
     width: 200,
     textAlign: 'center',
-    fontWeight: '700',
+    fontFamily: mainStyles.fontPoppinsBold,
   },
   iconContainer: {
     justifyContent: 'center',
@@ -161,17 +162,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   fullText: {
-    fontSize: 15,
+    fontSize: mainStyles.textFontSize,
     alignSelf: 'flex-start',
-    fontWeight: 'bold',
+    fontFamily: mainStyles.fontPoppinsBold,
     color: '#fafcfc',
     letterSpacing: 1,
   },
   endText: {
     marginStart: 25,
-    fontSize: 15,
+    fontSize: mainStyles.textFontSize,
     alignSelf: 'flex-start',
-    fontWeight: 'bold',
+    fontFamily: mainStyles.fontPoppinsBold,
     color: '#fafcfc',
     letterSpacing: 1,
   },
