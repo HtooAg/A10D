@@ -1,18 +1,34 @@
 import axios from 'axios';
+import { useSelector } from 'react-redux';
+
 
 const axiosInstance = axios.create({
   baseURL: 'http://65.18.112.78:9090',
-  // headers: {
-  //   Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxZGQ3ZDVlNzFmM2MxNjAyODAwNGJkYzJlZDllZThjZiIsIm5iZiI6MTcyMjkyMTU4MS42NjE1Niwic3ViIjoiNjZiMWFjNjZjZWVmZWZkZjAxMGNmNDExIiwic2NvcGVzIjpbImFwaV9yZWFkIl0sInZlcnNpb24iOjF9.O8lO7ht0jcqyeKfaOPMnc3C3IL1jZXaknyIJOzfVc_M`,
-  //   'Content-Type': 'application/json',
-  // },
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
+
+const axiosInstanceWithToken = axios.create({
+  baseURL: 'http://65.18.112.78:9090',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+export const setAuthToken = (token: string) => {
+  axiosInstanceWithToken.defaults.headers.Authorization = `Bearer ${token}`;
+};
+export const getRequestWithToken = async (URL: string) =>
+  axiosInstanceWithToken.get(URL);
+export const postRequestWithToken = async (URL: string, data: any) =>
+  axiosInstanceWithToken.post(URL, data);
 
 export const getRequest = async URL => await axiosInstance.get(URL);
 
 export const postRequest = async (URI, payload) => await axiosInstance.post(URI, payload);
 
-export const loginRequest = async (URI) => await axiosInstance.post(URI);
+export const singleRequest = async (URI) => await axiosInstance.post(URI);
 
 //    export const putRequest = async (URI, payload) => await axiosInstance.put(URI, payload);
 

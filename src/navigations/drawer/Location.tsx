@@ -11,8 +11,18 @@ import React, {Component, FC} from 'react';
 import {Text, StyleSheet, View, TouchableOpacity, Alert} from 'react-native';
 import { NavigationType } from '../../type_hint/navType';
 import { mainStyles } from '../../components/MainStyle';
+import { postRequestWithToken, setAuthToken } from '../../api/Api';
+import { useSelector } from 'react-redux';
 
 const Location: FC<NavigationType> = ({navigation}) => {
+const loginUser = useSelector(state => state.login.loginUser);
+  const fetchLocation = async () => {
+    setAuthToken(loginUser.token.access_token);
+    const response = await postRequestWithToken(
+      'api/v1/register-home-location',
+      data,
+    );
+  }
   return (
     <>
       <View style={styles.header}>

@@ -1,4 +1,4 @@
-import React, {Component, FC, useState, useEffect} from 'react';
+import React, {Component, useState, useEffect, FC} from 'react';
 import {
   Text,
   StyleSheet,
@@ -7,39 +7,76 @@ import {
   TouchableOpacity,
   Alert,
   Dimensions,
+  Platform,
 } from 'react-native';
 import Header from '../Header';
 import {AlignLeft} from 'lucide-react-native';
 import { NavigationType } from '../../type_hint/navType';
 import { mainStyles } from '../../components/MainStyle';
+import { getRequestWithToken, postRequest, postRequestWithToken, setAuthToken } from '../../api/Api';
+import DeviceInfo from 'react-native-device-info';
+import DateTime from '../../components/DateTime';
+import { useSelector } from 'react-redux';
+import GetLocation from './GetLocation';
 
 const Home: FC<NavigationType> = ({navigation}) => {
   const screenWidth = Dimensions.get('window').width;
-  const [currentTime, setCurrentTime] = useState(new Date());
+  const [localTime, setLocalTime] = useState(new Date());
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
-  useEffect(() => {
-    // Update the time every second
-    const interval = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
+  const [deviceData, setDeviceData] = useState({});
+  const [dashboardData, setDashboardData] = useState({});
+  const [location, setLocation] = useState()
+  
 
-    // Cleanup the interval on component unmount
-    return () => clearInterval(interval);
-  }, []);
+  const loginUser = useSelector(state => state.login.loginUser);
 
-  // Time components
-  const hours = currentTime.getHours();
-  const minutes = currentTime.getMinutes().toString().padStart(2, '0');
-  const seconds = currentTime.getSeconds().toString().padStart(2, '0');
+  console.log('User Info: ', loginUser?.user)
+  // console.log('User Location: ', loginUser?.user?.locations);
 
-  // Day of the week
-  const dayOfWeek = currentTime.toLocaleString('default', {weekday: 'short'});
+  const responseOfDevice = async () => {
 
-  // Date components
-  const year = currentTime.getFullYear();
-  const month = currentTime.toLocaleString('default', {month: 'short'}); // Full month name
-  const date = currentTime.getDate();
+    setAuthToken(loginUser?.token?.access_token);
+    const response = await getRequestWithToken(`/api/v1/devices`);
+    setDeviceData(response.data);
+    console.log('Device Data: ', response.data);
+  }
+
+  const responseOfDashboard = async () => {
+    try {
+      setAuthToken(loginUser?.token?.access_token);
+      const response = await getRequestWithToken('/api/v1/dashboard');
+      setDashboardData(response.data);
+      console.log('Dashboard Data: ', response.data);
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const fetchLoaction = async () => {
+    const data = GetLocation();
+    console.log('Location: ',data)
+  }
+  const checkInSubmit = async () => {
+    try {
+      responseOfDevice()
+      responseOfDashboard()
+      fetchLoaction()
+  //     const device_id = responseOfDevice?.data
+  //       ?.data.map(device => (device.state === "APPROVED" ? device : null))
+  // .filter(device => device !== null);
+      // const staff_id = loginUser?.user?.staff_id;
+      // const location_id = loginUser?.user?.locations?.id;
+      // const data = `device_id=${device_id[0].id}&space_id=${loginUser?.user?.space_id}&location_id=${loginUser?.user?.locations[0]?.id}`;
+      // setAuthToken(loginUser?.token?.access_token);
+      // const responseOfCheckIn = postRequestWithToken('/api/v1/check-in', data);
+
+      console.log('check in: ');
+
+    } catch (error) {
+      console.error(error)
+    }
+  }
   return (
     <View style={{flex: 1}}>
       <Header>
@@ -69,7 +106,7 @@ const Home: FC<NavigationType> = ({navigation}) => {
             justifyContent: 'center',
             marginTop: 30,
           }}>
-          <Text
+          {/* <Text
             style={{
               fontSize: 35,
               color: '#fff',
@@ -87,7 +124,8 @@ const Home: FC<NavigationType> = ({navigation}) => {
               fontFamily: mainStyles.fontPoppinsRegular,
             }}>
             {dayOfWeek}, {date} {month} {year}
-          </Text>
+          </Text> */}
+          <DateTime />
         </View>
       </Header>
       <View style={{flex: 1}}>
@@ -104,8 +142,10 @@ const Home: FC<NavigationType> = ({navigation}) => {
           <View style={styles.cardItem}>
             <Text
               style={{
-                color: '#000',
+                color: mainStyles.greenColor,
                 fontFamily: mainStyles.fontPoppinsRegular,
+                fontSize: mainStyles.textFontSize,
+                textTransform: 'uppercase'
               }}>
               Free
             </Text>
@@ -138,7 +178,7 @@ const Home: FC<NavigationType> = ({navigation}) => {
       </View>
       <TouchableOpacity
         style={{...styles.cardCheckOut, opacity: isEnabled ? 0.3 : 1}}
-        onPress={() => Alert.alert('Hi')}>
+        onPress={checkInSubmit}>
         <Text
           style={{
             color: '#fff',

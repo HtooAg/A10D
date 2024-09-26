@@ -1,16 +1,57 @@
 import {ChevronLeft} from 'lucide-react-native';
-import React, {Component} from 'react';
+import React, {Component, useEffect, useState} from 'react';
 import {
   Text,
   StyleSheet,
   View,
   TouchableOpacity,
   ScrollView,
+  FlatList,
 } from 'react-native';
 import {NavigationType} from '../../type_hint/navType';
 import { mainStyles } from '../../components/MainStyle';
+import { getRequestWithToken, setAuthToken } from '../../api/Api';
+import { useSelector } from 'react-redux';
+import moment from 'moment';
 
-const AttendanceDetails: React.FC<NavigationType> = ({navigation}) => {
+const AttendanceDetails: React.FC<NavigationType> = ({navigation, route}) => {
+
+  const [attendanceDetail, setAttendanceDetail] = useState([])
+  const [date, setDate] = useState([])
+  const {item} = route.params;
+  const loginUser = useSelector(state => state.login.loginUser);
+
+  // console.log('Detail Id: ', item.id)
+  // console.log('Detail Info: ', attendanceDetail.id);
+  const fetchAttendandceDetail = async () => {
+    try {
+      setAuthToken(loginUser.token.access_token);
+      const response = await getRequestWithToken(
+        `/api/v1/attendances/${item.id}`,
+      );
+      setAttendanceDetail(response.data.data.histories);
+      setDate(response.data);
+      // console.log('Attendace Data', attendanceDetail);
+    } catch (error) {
+      console.log('Error:', error);
+    }
+  }
+
+  const formatTime = time => {
+    const [hours, minutes, seconds] = time.split(':');
+    const period = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours % 12 || 12; // convert 24-hour format to 12-hour format
+    return `${formattedHours}:${minutes} ${period}`;
+  };
+
+  const formatDateToDay = dateString => {
+    const date = new Date(dateString);
+    return new Intl.DateTimeFormat('en-US', {weekday: 'long'}).format(date);
+  };
+
+  useEffect(() => {
+    fetchAttendandceDetail();
+  }, [])
   return (
     <View style={styles.container}>
       <View style={styles.navBar}>
@@ -21,26 +62,31 @@ const AttendanceDetails: React.FC<NavigationType> = ({navigation}) => {
         <Text style={{opacity: 0}}>Detail</Text>
       </View>
       <View style={styles.card}>
-        <Text style={styles.card_Txt}>dd-mm-yyyy</Text>
-        <Text style={styles.card_Times}>Times</Text>
+        <Text style={styles.card_Txt}>
+          {moment(date?.data?.date).format('DD-MMMM-YYYY')}
+        </Text>
+        <Text style={styles.card_Times}>{attendanceDetail?.length} times</Text>
       </View>
-      <ScrollView
-        style={{flex: 1}} // Ensure ScrollView expands
-        contentContainerStyle={styles.scrollContent} // Ensure content has room to grow
-      >
-        {Array.from({length: 10}).map((_, index) => (
+
+      <FlatList
+        data={attendanceDetail}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({item, index}) => (
           <TouchableOpacity
             key={index}
             style={styles.cardDetail}
-            onPress={() => navigation.navigate('AttendanceDetailOfLocation')}>
+            onPress={() =>
+              navigation.navigate('AttendanceDetailOfLocation', {item: item})
+            }>
             <View style={styles.cardDetail_Item}>
-              <Text style={{color: '#fff'}}>Hours</Text>
-              <Text style={{color: '#fff'}}>#{index + 1}</Text>
+              <Text style={{color: '#fff'}}>{formatTime(item?.time)}</Text>
+              <Text style={{color: '#fff'}}># {index + 1}</Text>
             </View>
-            <Text style={styles.cardDetail_Txt}>Place! (MICT)</Text>
+            <Text style={styles.cardDetail_Txt}>({item?.location_name})</Text>
+            
           </TouchableOpacity>
-        ))}
-      </ScrollView>
+        )}
+      />
     </View>
   );
 };
@@ -84,6 +130,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     fontSize: 18,
+    color: '#fff',
   },
   scrollContent: {
     paddingVertical: 20,

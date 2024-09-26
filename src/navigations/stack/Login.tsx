@@ -15,13 +15,15 @@ import {
   StyleSheet,
   FlatList,
   Alert,
+  Platform,
 } from 'react-native';
 import {Controller, useForm} from 'react-hook-form';
-import {loginRequest, postRequest} from '../../api/Api';
+import {getRequestWithToken, postRequest, postRequestWithToken, setAuthToken, singleRequest} from '../../api/Api';
 import {useDispatch, useSelector} from 'react-redux';
 import {addLoginUser} from '../../features/login/loginSlice';
 import {addRegisterUser} from '../../features/register/RegisterSlice';
 import { mainStyles } from '../../components/MainStyle';
+import DeviceInfo from 'react-native-device-info';
 
 
 type LoginData = {
@@ -36,6 +38,9 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
   navigation,
   spaceId,
 }) => {
+
+  const dispatch = useDispatch();
+  const loginUser = useSelector(state => state.login.loginUser);
   const {
     control,
     handleSubmit,
@@ -44,50 +49,65 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
   } = useForm({
     defaultValues: {
       space_id: spaceId,
-      email: '',
+      email: loginUser?.user?.email || '',
       password: '',
     },
   });
 
-  const dispatch = useDispatch();
-  const loginUser = useSelector(state => state.login.loginUser);
-  const RegisterUser = useSelector(state => state.register.registerUser);
-
-  // const userEmail = RegisterUser?.email;
-  // const userPassword = RegisterUser?.password;
+  
+  
+  
+  
   console.log('Login Slice: ', loginUser);
-  // console.log('Login Detail : ', loginUser.email);
-  // console.log('Register: ', RegisterUser);
-  // console.log('Register Detail : ', RegisterUser.trim().name);
-  // Object.keys(RegisterUser).map(key => {
-  //   console.log(`${key}: ${RegisterUser[key]}`);
-  // });
+  
 
   const onSubmit = async (loginData: LoginData) => {
     try {
-      const fetchAPI = await loginRequest(
-        `/api/v1/users/user-login?space-id=${loginData.space_id}&email=${loginData.email}&password=${loginData.password}`
+      const fetchAPI = await singleRequest(
+        `/api/v1/users/user-login?space-id=${loginData.space_id}&email=${loginData.email}&password=${loginData.password}`,
       );
 
-      
-        console.log('Login Data: ',fetchAPI.data.data);
-        dispatch(addLoginUser(fetchAPI.data.data));
-        if (fetchAPI.data.status === 'success') {
-          navigation.navigate('Home', {
-            screen: 'HomeStack',
-            params: {
-              spaceId: spaceId,
-              user: loginUser.user,
-              token: loginUser.token,
-            },
-          });
-        }
-      
-      // reset({
-      //   email: '',
-      //   password: '',
-      //   space_id: spaceId,
-      // });
+      // console.log('Login Data: ', fetchAPI.data);
+      dispatch(addLoginUser(fetchAPI.data.data || fetchAPI.data));
+
+      //For Device Register
+      if (loginUser?.user?.is_device_register != true) {
+        const deviceType = Platform.OS;
+        const deviceModel = DeviceInfo.getBrand();
+        const systemVersion = DeviceInfo.getSystemVersion();
+        const uniqueId = await DeviceInfo.getUniqueId();
+        const deviceInfo = {
+          type: deviceType,
+          model: deviceModel,
+          os: systemVersion,
+          udid: uniqueId,
+        };
+        console.log(deviceInfo);
+        setAuthToken(loginUser?.token?.access_token);
+        const response = await postRequestWithToken(
+          `/api/v1/devices/register-device`,
+          deviceInfo,
+        );
+
+        console.log('Device Info: ', response);
+      }
+
+      if (fetchAPI.data.status === 'success') {
+        navigation.navigate('Home', {
+          screen: 'HomeStack',
+          params: {
+            spaceId: spaceId,
+            user: loginUser.user,
+            token: loginUser.token,
+          },
+        });
+      }
+
+      reset({
+        email: '',
+        password: '',
+        space_id: spaceId,
+      });
     } catch (error) {
       console.log('Failed to login:', error);
     }
@@ -185,7 +205,7 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
           </Text>
         )}
 
-        {loginUser.status === 'fail' && (
+        {loginUser?.status === 'fail' && (
           <Text
             style={{
               color: 'red',
@@ -193,7 +213,7 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
               fontSize: 10,
               fontFamily: mainStyles.fontPoppinsItalic,
             }}>
-            {loginUser.message}
+            {loginUser?.message}
           </Text>
         )}
 

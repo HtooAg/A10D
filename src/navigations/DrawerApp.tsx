@@ -21,6 +21,7 @@ import User from './drawer/User';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 // Stack navigator for managing screens within the home section
 const HomeStackNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -42,6 +43,7 @@ const DrawerApp: React.FC = () => {
   const [isLogin, setIsLogin] = useState(false);
   const [changeDevice, setChangeDevice] = useState(false);
 
+  const loginUser = useSelector(state => state.login.loginUser);
   return (
     <Drawer.Navigator
       initialRouteName="HomeStack"
@@ -78,7 +80,7 @@ const DrawerApp: React.FC = () => {
               }}>
               <User2 color={color} size={45} strokeWidth={1.5} />
               <Text style={{color: color, fontFamily: 'Poppins-Bold', fontSize: 15}}>
-                Htoo Aung Wai
+                {loginUser.user.name}
               </Text>
               <Text style={{opacity: 0}}>User</Text>
             </View>
