@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Animated, StyleSheet, Text, View, Easing} from 'react-native';
+import {Animated, StyleSheet, Text, View, Easing, Image} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { mainStyles } from './MainStyle';
 
@@ -94,14 +94,14 @@ const SplashScreen = () => {
         start={{x: 0.5, y: 0}}
         end={{x: 0, y: 1}}>
         <View style={styles.iconContainer}>
-          <Animated.Image
+          <Image
             style={[
               styles.icon,
               {
                 transform: [{perspective: 1000}, {rotateY}],
               },
             ]}
-            source={require('../assets/imgs/location.png')}
+            source={require('../assets/imgs/logo-removebg-preview.png')}
           />
           <Text style={styles.text}>A 10 D</Text>
         </View>
