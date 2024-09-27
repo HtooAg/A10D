@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 const User: React.FC<NavigationType> = ({navigation}) => {
 
   const loginUser = useSelector(state => state.login.loginUser);
+  const spaceUser = useSelector(state => state.spaceId.spaceUser) || {};
 
   console.log('User Info: ', loginUser);
   return (
@@ -46,7 +47,7 @@ const User: React.FC<NavigationType> = ({navigation}) => {
           </View>
           <View>
             <Text style={styles.cardTxt}>Space Name</Text>
-            <Text style={styles.cardTxt}>{loginUser.user.staff_id}</Text>
+            <Text style={styles.cardTxt}>{spaceUser?.title}</Text>
           </View>
         </View>
       </View>

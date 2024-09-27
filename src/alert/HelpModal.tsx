@@ -8,7 +8,7 @@ import {
   Linking,
   Pressable
 } from 'react-native';
-import ContextProvider from '../components/Context';
+import ContextProvider, { useCustomContext } from '../components/Context';
 
 type Device = {
   setChangeDevice: boolean;
@@ -20,7 +20,7 @@ const HelpModal: React.FC<Device> = () => {
     setEmailModalVisible,
     callModalVisible,
     setCallModalVisible,
-  } = useContext(ContextProvider);
+  } = useCustomContext();
 
   return (
     <>

@@ -10,20 +10,78 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Alert,
 } from 'react-native';
 import {AlignLeft, Eye, EyeOff} from 'lucide-react-native';
 import Header from '../Header';
 import {NavigationType} from '../../type_hint/navType';
-import { mainStyles } from '../../components/MainStyle';
+import {mainStyles} from '../../components/MainStyle';
+import {useDispatch, useSelector} from 'react-redux';
+import {Controller, useForm} from 'react-hook-form';
+import {patchRequest} from '../../api/Api';
+import {addLoginUser} from '../../features/login/loginSlice';
+
+type ChangeData = {
+  oldPassword: string;
+  newPassword: string;
+};
 
 const Change: FC<NavigationType> = ({navigation}) => {
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: {errors},
+    getValues,
+  } = useForm({
+    defaultValues: {
+      newPassword: '',
+      oldPassword: '',
+      confirmPassword: '',
+    },
+  });
+  const dispatch = useDispatch();
   const screenWidth = Dimensions.get('window').width;
-  const [password, setPassword] = useState('');
-  const [reset, setReset] = useState('');
-  const [type, setType] = useState('');
+
   const [showPassword, setShowPassword] = useState(false);
   const [showReset, setShowReset] = useState(false);
   const [showType, setShowType] = useState(false);
+  const loginUser = useSelector(state => state.login.loginUser);
+  const RegisterUser = useSelector(state => state.register.registerUser);
+  console.log('Register User Data: ', RegisterUser);
+
+  console.log('Login User:', loginUser?.user);
+
+  const onSubmit = async (loginData: ChangeData) => {
+    try {
+      const fetchAPI = await patchRequest(
+        `/api/v1/users/change-password?old-password=${loginData.oldPassword}&new-password=${loginData.newPassword}`,
+      );
+
+      console.log('Login Data: ', fetchAPI.data);
+      dispatch(addLoginUser(fetchAPI.data.data || fetchAPI.data));
+
+      if (fetchAPI.data.status === 'success') {
+        navigation.navigate('Login', {
+          screen: 'Login',
+          params: {
+            user: loginUser.user,
+            token: loginUser.token,
+          },
+        });
+      }
+
+      Alert.alert('Alert', fetchAPI.data.message);
+      reset({
+        newPassword: '',
+        oldPassword: '',
+        confirmPassword: '',
+      });
+    } catch (error) {
+      console.log('Failed to login:', error);
+      // You can display an error message to the user here
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -50,13 +108,20 @@ const Change: FC<NavigationType> = ({navigation}) => {
           <View style={{...styles.card, top: screenWidth / 2.5}}>
             <View>
               <View style={styles.inputContainer}>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Current Password"
-                  placeholderTextColor="#000"
-                  value={password}
-                  onChangeText={setPassword}
-                  secureTextEntry={!showPassword}
+                <Controller
+                  control={control}
+                  rules={{required: 'Current Password is required!'}}
+                  name="oldPassword"
+                  render={({field: {onChange, onBlur, value}}) => (
+                    <TextInput
+                      style={styles.input}
+                      placeholder="Current Password"
+                      placeholderTextColor="#000"
+                      onChangeText={onChange}
+                      value={value}
+                      secureTextEntry={!showPassword}
+                    />
+                  )}
                 />
                 <TouchableOpacity
                   onPress={() => setShowPassword(!showPassword)}>
@@ -67,14 +132,40 @@ const Change: FC<NavigationType> = ({navigation}) => {
                   )}
                 </TouchableOpacity>
               </View>
+              {errors?.oldPassword && (
+                <Text
+                  style={{
+                    color: 'red',
+                    paddingHorizontal: 10,
+                    fontSize: 10,
+                    fontFamily: mainStyles.fontPoppinsItalic,
+                  }}>
+                  {errors?.oldPassword.message}
+                </Text>
+              )}
               <View style={styles.inputContainer}>
-                <TextInput
-                  style={styles.input}
-                  placeholder="New Password"
-                  placeholderTextColor="#000"
-                  value={reset}
-                  onChangeText={setReset}
-                  secureTextEntry={!showReset}
+                <Controller
+                  control={control}
+                  name="newPassword"
+                  rules={{
+                    required: 'New Password is required!',
+                    validate: value => {
+                      if (RegisterUser.password === value) {
+                        return 'New password cannot be the same as the old password.';
+                      }
+                      return true;
+                    },
+                  }}
+                  render={({field: {onChange, onBlur, value}}) => (
+                    <TextInput
+                      style={styles.input}
+                      placeholder="New Password"
+                      placeholderTextColor="#000"
+                      onChangeText={onChange}
+                      value={value}
+                      secureTextEntry={!showReset}
+                    />
+                  )}
                 />
                 <TouchableOpacity onPress={() => setShowReset(!showReset)}>
                   {showReset ? (
@@ -84,14 +175,40 @@ const Change: FC<NavigationType> = ({navigation}) => {
                   )}
                 </TouchableOpacity>
               </View>
+              {errors?.newPassword && (
+                <Text
+                  style={{
+                    color: 'red',
+                    paddingHorizontal: 10,
+                    fontSize: 10,
+                    fontFamily: mainStyles.fontPoppinsItalic,
+                  }}>
+                  {errors?.newPassword.message}
+                </Text>
+              )}
               <View style={styles.inputContainer}>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Confirm Password"
-                  placeholderTextColor="#000"
-                  value={type}
-                  onChangeText={setType}
-                  secureTextEntry={!showType}
+                <Controller
+                  control={control}
+                  name="confirmPassword"
+                  rules={{
+                    required: 'Confirm Password is required!',
+                    validate: value => {
+                      if (value !== getValues('newPassword')) {
+                        return 'Passwords do not match!';
+                      }
+                      return true;
+                    },
+                  }}
+                  render={({field: {onChange, onBlur, value}}) => (
+                    <TextInput
+                      style={styles.input}
+                      placeholder="Confirm Password"
+                      placeholderTextColor="#000"
+                      onChangeText={onChange}
+                      value={value}
+                      secureTextEntry={!showType}
+                    />
+                  )}
                 />
                 <TouchableOpacity onPress={() => setShowType(!showType)}>
                   {showType ? (
@@ -101,8 +218,20 @@ const Change: FC<NavigationType> = ({navigation}) => {
                   )}
                 </TouchableOpacity>
               </View>
-
-              <TouchableOpacity style={styles.loginButton}>
+              {errors?.confirmPassword && (
+                <Text
+                  style={{
+                    color: 'red',
+                    paddingHorizontal: 10,
+                    fontSize: 10,
+                    fontFamily: mainStyles.fontPoppinsItalic,
+                  }}>
+                  {errors?.confirmPassword.message}
+                </Text>
+              )}
+              <TouchableOpacity
+                style={styles.loginButton}
+                onPress={handleSubmit(onSubmit)}>
                 <Text style={styles.loginButtonText}>Change</Text>
               </TouchableOpacity>
             </View>
@@ -127,7 +256,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '90%',
     alignSelf: 'center',
-    marginTop: 20,
+    marginTop: 50,
   },
   inputContainer: {
     flexDirection: 'row',

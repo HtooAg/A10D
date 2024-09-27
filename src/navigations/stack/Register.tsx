@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   TextInput,
   Alert,
-  Button,
 } from 'react-native';
 import {
   Eye,
@@ -15,21 +14,15 @@ import {
   User,
   Fingerprint,
   Phone,
-  AlertTriangle
 } from 'lucide-react-native';
-import { Controller, useForm } from 'react-hook-form';
-import { NavigationType } from '../../type_hint/navType';
-import { FC, useState } from 'react';
-import { postRequest } from '../../api/Api';
-import {
-  ALERT_TYPE,
-  Dialog,
-  AlertNotificationRoot,
-  Toast,
-} from 'react-native-alert-notification';
-import { useDispatch, useSelector } from 'react-redux';
-import { addRegisterUser } from '../../features/register/RegisterSlice';
-import { mainStyles } from '../../components/MainStyle';
+import {Controller, useForm} from 'react-hook-form';
+import {NavigationType} from '../../type_hint/navType';
+import {FC, useState} from 'react';
+import {postRequest} from '../../api/Api';
+import {ALERT_TYPE, Toast} from 'react-native-alert-notification';
+import {useDispatch, useSelector} from 'react-redux';
+import {addRegisterUser} from '../../features/register/RegisterSlice';
+import Loading from '../../components/Loading';
 
 type RegisterData = {
   name: string;
@@ -40,14 +33,12 @@ type RegisterData = {
   phoneNo: string;
 };
 
-const Register: FC<NavigationType> = ({navigation, spaceId}) => {
-
-  const [isPressed, setIsPressed] = useState(false);
+const Register: FC<NavigationType> = ({navigation, spaceId, setLoading}) => {
   const {
     control,
     handleSubmit,
     formState: {errors},
-    reset
+    reset,
   } = useForm({
     defaultValues: {
       name: '',
@@ -62,26 +53,27 @@ const Register: FC<NavigationType> = ({navigation, spaceId}) => {
   console.log(spaceId);
 
   const [showPassword, setShowPassword] = useState(false);
-   const dispatch = useDispatch();
-   const RegisterUser = useSelector(state => state.register.registerUser);
+  const dispatch = useDispatch();
+  const RegisterUser = useSelector(state => state.register.registerUser);
 
-console.log('Register User: ', RegisterUser.email);
-
-
+  console.log('Register User Data: ', RegisterUser);
+  console.log('Navigation prop:', navigation);
 
   const onSubmit = async (registerData: RegisterData) => {
-    
+    console.log(registerData);
     try {
+      setTimeout(() => {
+        setLoading(false);
+      }, 3000);
       const response = await postRequest(
-        '/api/v1/users/register?',
+        '/api/v1/users/register',
         registerData,
       );
+      setLoading(true);
+      navigation.navigate('Login');
 
-
-      if (response.data.status === 'success'){
-        dispatch(addRegisterUser(response.data.data));
-      }
-      console.log('Api Data: ', response.data);
+      dispatch(addRegisterUser(response.data.data));
+      console.log(response.data);
 
       if (response.data.status === 'fail') {
         Toast.show({
@@ -96,16 +88,20 @@ console.log('Register User: ', RegisterUser.email);
           textBody: response.data.message,
         });
       }
-      // reset({
-      //   name: '',
-      //   email: '',
-      //   password: '',
-      //   space_id: spaceId,
-      //   staffid: '',
-      //   phoneNo: '',
-      // });
-      // navigation.navigate('Home');
+      reset({
+        name: '',
+        email: '',
+        password: '',
+        space_id: spaceId,
+        staffid: '',
+        phoneNo: '',
+      });
     } catch (error) {
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: 'Error',
+        textBody: 'Registration failed. Please try again later.',
+      });
       console.error('Error during registration:', error);
     }
   };
@@ -177,7 +173,9 @@ console.log('Register User: ', RegisterUser.email);
           <Mail size={20} color="#000" style={styles.inputIcon} />
           <Controller
             control={control}
-            rules={{required: true}}
+            rules={{
+              required: true,
+            }}
             render={({field: {onChange, onBlur, value}}) => (
               <TextInput
                 style={styles.input}
@@ -214,14 +212,7 @@ console.log('Register User: ', RegisterUser.email);
             )}
             name="password"
           />
-          <TouchableOpacity
-            onPressIn={() => setIsPressed(true)}
-            onPressOut={() => setIsPressed(false)}
-            onPress={() => setShowPassword(!showPassword)}
-            style={[
-              styles.eye_icon,
-              {backgroundColor: isPressed ? '#000' : '#fff'},
-            ]}>
+          <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
             {showPassword ? (
               <Eye size={20} color="#000" />
             ) : (
@@ -239,7 +230,15 @@ console.log('Register User: ', RegisterUser.email);
           <Fingerprint size={20} color="#000" style={styles.inputIcon} />
           <Controller
             control={control}
-            rules={{required: true}}
+            rules={{
+              required: true,
+              validate: value => {
+                if (RegisterUser?.staffid === value) {
+                  Alert.alert('Alert', 'StaffID already exists');
+                }
+                return true;
+              },
+            }}
             render={({field: {onChange, onBlur, value}}) => (
               <TextInput
                 style={styles.input}
@@ -295,14 +294,8 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     paddingVertical: 12,
-    fontSize: mainStyles.textFontSize,
-    fontFamily: mainStyles.fontPoppinsItalic,
+    fontSize: 16,
     color: '#000',
-  },
-  eye_icon: {
-    paddingVertical: 5,
-    paddingHorizontal: 5,
-    borderRadius: 25,
   },
   loginButton: {
     backgroundColor: '#2563eb',
@@ -313,8 +306,8 @@ const styles = StyleSheet.create({
   },
   loginButtonText: {
     color: 'white',
-    fontSize: mainStyles.textFontSize,
-    fontFamily: mainStyles.fontPoppinsSemiBoldItalic,
+    fontSize: 18,
+    fontWeight: '600',
   },
 });
 

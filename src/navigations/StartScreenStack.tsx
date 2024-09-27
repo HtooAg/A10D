@@ -1,7 +1,5 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
-import SpaceId from './stack/SpaceId';
-import LoginRegister from './stack/LoginRegister';
 import DrawerApp from './DrawerApp';
 import StackScreens from './StackScreens';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';

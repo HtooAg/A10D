@@ -10,36 +10,29 @@ import {useDispatch, useSelector} from 'react-redux';
 import {singleRequest} from '../../api/Api';
 import {addResetUser} from '../../features/reset/ResetSlice';
 
-const ForgotPassword: FC<NavigationType> = ({navigation, route}) => {
+const ResetScreen: FC<NavigationType> = ({navigation, route}) => {
+  const {email, keyData, otp} = route.params;
   const loginUser = useSelector(state => state.login.loginUser);
-
   const {
     control,
     handleSubmit,
     formState: {errors},
-  } = useForm({values: {email: loginUser.user.email}});
+  } = useForm({values: {password: ''}});
   const dispatch = useDispatch();
-  console.log(loginUser.user.email);
 
-  const onSubmit = async (data: {email: string}) => {
-    console.log('Submitted Data: ', data);
+  const onSubmit = async (data: {password: string}) => {
+    console.log('Submitted Data: ', data.password, otp, email, keyData);
+
     try {
       const response = await singleRequest(
-        `api/v1/users/forgot-password?email=${data.email}`,
+        `/api/v1/users/reset-password?email=${email}&key=${keyData}&otp=${otp}&new-password=${data.password}`,
       );
       Alert.alert('Alert', response.data.message);
-
-      // Dispatching the relevant part of the response (the key, otp, and email)
-      dispatch(addResetUser(response.data.data));
       console.log('API Response:', response.data);
 
-      // Navigate to ResetPassword screen with the reset key data
-      navigation.navigate('ResetPassword', {
-        keyData: response.data.data.key,
-        otp: response.data.data.otp,
-        email: data.email,
-      });
-
+     if (response.data.status === 'success') {
+       navigation.navigate('Login');
+     }
       //  console.log(first)
     } catch (error) {
       console.error('Error during reset:', error);
@@ -64,7 +57,7 @@ const ForgotPassword: FC<NavigationType> = ({navigation, route}) => {
           style={styles.iconContainer}>
           <ArrowLeft color={'#fff'} size={25} />
         </TouchableOpacity>
-        <Text style={styles.headerTxt}>Forgot Password</Text>
+        <Text style={styles.headerTxt}>Reset Password</Text>
       </View>
       <View style={styles.card}>
         <Text style={styles.cardTxt_header}>
@@ -74,35 +67,28 @@ const ForgotPassword: FC<NavigationType> = ({navigation, route}) => {
         <Controller
           control={control}
           rules={{
-            required: 'Email is required',
-            validate: value => {
-              if (!value.includes('@')) {
-                return 'Please enter a valid email address';
-              }
-              return true;
-            },
+            required: 'New Password is required',
           }}
           render={({field: {onChange, onBlur, value}}) => (
             <TextInput
               style={styles.input}
-              placeholder="Email"
+              placeholder="Enter New Password"
               placeholderTextColor="#000"
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
-              keyboardType="email-address"
             />
           )}
-          name="email"
+          name="password"
         />
-        {errors?.email && (
+        {errors?.password && (
           <Text
             style={{
               color: 'red',
               fontSize: mainStyles.textFontSize,
               fontFamily: mainStyles.fontPoppinsItalic,
             }}>
-            {errors.email.message}
+            {errors.password.message}
           </Text>
         )}
         <TouchableOpacity
@@ -189,4 +175,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ForgotPassword;
+export default ResetScreen;

@@ -5,6 +5,9 @@ import { useSelector } from 'react-redux';
 const axiosInstance = axios.create({
   baseURL: 'http://65.18.112.78:9090',
   headers: {
+
+    Authorization: `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5NSIsImlhdCI6MTcyNzE1NjA2OCwiZXhwIjoxNzI3MjQyNDY4fQ.aBu0rheAWpTkNPjtBRGfgeVjtmb02MI2u0pqzRnNClJF-q_z2DBBebEXBCtb_GMpmTO_Yt7dSVxxJaTEPn4EFw`,
+
     'Content-Type': 'application/json',
   },
 });
@@ -32,7 +35,7 @@ export const singleRequest = async (URI: string) => await axiosInstance.post(URI
 
 //    export const putRequest = async (URI, payload) => await axiosInstance.put(URI, payload);
 
-//    export const patchRequest = async (URI, payload) =>
-//      await axiosInstance.patch(URI, payload);
+   export const patchRequest = async (URI) =>
+     await axiosInstance.patch(URI);
 
 export const deleteRequest = async (URI: string) => await axiosInstance.delete(URI);

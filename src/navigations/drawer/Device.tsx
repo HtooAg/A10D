@@ -11,7 +11,7 @@ import {NavigationType} from '../../type_hint/navType';
 import {AlignLeft, Smartphone, HomeIcon} from 'lucide-react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import DeviceChange from '../../alert/DeviceChange';
-import ContextProvider from '../../components/Context';
+import { ContextProvider } from '../../components/Context';
 import { mainStyles } from '../../components/MainStyle';
 import { screenWidth } from '../Header';
 import { getRequestWithToken, setAuthToken, singleRequest } from './../../api/Api';

@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Dimensions,
   Switch,
+  Alert,
 } from 'react-native';
 import {NavigationType} from '../../type_hint/navType';
 import {AlignLeft, Clock} from 'lucide-react-native';
@@ -21,7 +22,12 @@ type Types = Noti & NavigationType;
 const Noti: React.FC<Types> = ({navigation}) => {
   const screenWidth = Dimensions.get('window').width;
   const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+  const toggleSwitch = () => {
+    setIsEnabled(previousState => !previousState);
+    isEnabled
+      ? Alert.alert('Alert', 'Noti is disabled!')
+      : Alert.alert('Alert', 'Noti is enabled!');
+  };
   return (
     <View
       style={{flex: 1, position: 'relative', zIndex: 0, alignItems: 'center'}}>

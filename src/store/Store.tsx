@@ -3,18 +3,21 @@ import {combineReducers, configureStore} from '@reduxjs/toolkit';
 import {FLUSH, PAUSE, PERSIST, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE} from 'redux-persist';
 import loginSlice from '../features/login/loginSlice';
 import RegisterSlice from '../features/register/RegisterSlice';
+import ResetSlice from '../features/reset/ResetSlice';
+import spaceSlice from '../features/space/spaceSlice';
 
 // persistConfig setup
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  // whitelist: ['loginUser'],
 };
 
 // Combine your reducers (replace with actual reducers)
 const rootReducer = combineReducers({
   login: loginSlice,
-  register: RegisterSlice
+  register: RegisterSlice,
+  reset: ResetSlice,
+  spaceId: spaceSlice,
 });
 
 // Persist the rootReducer

@@ -43,6 +43,7 @@ const DrawerApp: React.FC = () => {
   const [isLogin, setIsLogin] = useState(false);
   const [changeDevice, setChangeDevice] = useState(false);
 
+
   const loginUser = useSelector(state => state.login.loginUser);
   return (
     <Drawer.Navigator
@@ -80,7 +81,7 @@ const DrawerApp: React.FC = () => {
               }}>
               <User2 color={color} size={45} strokeWidth={1.5} />
               <Text style={{color: color, fontFamily: 'Poppins-Bold', fontSize: 15}}>
-                {loginUser.user.name}
+                {loginUser?.user?.name}
               </Text>
               <Text style={{opacity: 0}}>User</Text>
             </View>

@@ -12,9 +12,12 @@ import SelectDropdown from 'react-native-select-dropdown';
 import {ChevronDown, ChevronUp} from 'lucide-react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {NavigationType} from '../../type_hint/navType';
-import { mainStyles } from '../../components/MainStyle';
+import {mainStyles} from '../../components/MainStyle';
+import {useDispatch} from 'react-redux';
+import {addSpaceId} from '../../features/space/spaceSlice';
 
 const SpaceId: FC<NavigationType> = ({navigation}) => {
+  const dispatch = useDispatch();
   const screenWidth = Dimensions.get('window').width;
   const [customInput, setCustomInput] = useState('');
   const {
@@ -29,14 +32,26 @@ const SpaceId: FC<NavigationType> = ({navigation}) => {
     },
   });
 
+  const emojisWithIcons = [
+    {index: 1, title: 'Xan'},
+    {index: 2, title: 'BI3'},
+    {index: 3, title: 'Kirin Engineering Co.,Ltd.'},
+    {index: 4, title: 'Demo'},
+    {index: 5, title: 'Demo123'},
+    {index: 6, title: 'Test'},
+    {index: 7, title: 'LOGCDC'},
+    {index: 8, title: 'Testing space'},
+  ];
 
-  const emojisWithIcons = [{index: 7, title: 'LOGCDC'}];
-
-
-  const onSubmit = (data) => {
-    navigation.navigate('Login', {spaceId: data.spaceName});
-  }
-
+  const onSubmit = data => {
+    const selectedSpace = data.spaceName; // spaceName is the selected dropdown item
+    dispatch(addSpaceId(selectedSpace));
+    navigation.navigate('Login', {
+      spaceId: selectedSpace.index, // Correct way to access index and title
+      spaceName: selectedSpace.title,
+    });
+    console.log('Selected Space:', selectedSpace);
+  };
 
   return (
     <View style={styles.container}>
@@ -76,7 +91,7 @@ const SpaceId: FC<NavigationType> = ({navigation}) => {
           render={({field: {onChange, value}}) => (
             <SelectDropdown
               data={emojisWithIcons}
-              onSelect={selectedItem => onChange(selectedItem.index)}
+              onSelect={selectedItem => onChange(selectedItem)}
               renderButton={(selectedItem, isOpened) => (
                 <View style={styles.dropdownButtonStyle}>
                   {selectedItem ? (

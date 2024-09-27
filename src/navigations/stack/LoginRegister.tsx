@@ -10,24 +10,35 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 
 import Login from './Login';
 import Register from './Register';
-import Header, { screenWidth } from '../Header';
 import {FC, useState} from 'react';
 import {ArrowLeft} from 'lucide-react-native';
 import {NavigationType} from '../../type_hint/navType';
-import { mainStyles } from '../../components/MainStyle';
+import {mainStyles} from '../../components/MainStyle';
+import Loading from '../../components/Loading';
+import {useSelector} from 'react-redux';
 
 const LoginRegister: FC<NavigationType> = ({navigation, route}) => {
-  const {spaceId} = route.params||'';
-  
-  const screenWidth = Dimensions.get('window').width; // Get screen width
-  const [isToggle, setIsToggle] = useState(true);
-  
+  // const {spaceId, spaceName} = route.params || '';
+  const spaceUser = useSelector(state => state.spaceId.spaceUser) || {};
 
-  console.log(spaceId)
+  console.log('Space User: ', spaceUser);
+
+  const screenWidth = Dimensions.get('window').width;
+  const [isToggle, setIsToggle] = useState(true);
+  const [loading, setLoading] = useState(false);
+
+  console.log(
+    'Space ID:',
+    spaceUser?.index,
+    'Space Name:',
+    spaceUser?.title,
+  );
+
   return (
     <SafeAreaView style={{flex: 1}}>
       <KeyboardAvoidingView
@@ -49,7 +60,7 @@ const LoginRegister: FC<NavigationType> = ({navigation, route}) => {
                   },
                 ]}
               />
-              <View style={{...styles.topStyle, top: screenWidth / 20}}>
+              <View style={{...styles.topStyle, top: (screenWidth / 150) * 3}}>
                 <TouchableOpacity
                   onPress={() => {
                     navigation.navigate('SpaceId');
@@ -66,47 +77,61 @@ const LoginRegister: FC<NavigationType> = ({navigation, route}) => {
                   style={{
                     ...styles.headerTitle,
                     right: screenWidth / 4.5,
-                    top: screenWidth/10,
+                    top: screenWidth / 10,
                     fontFamily: mainStyles.fontPoppinsRegular,
                   }}>
                   {isToggle ? 'Login' : 'Register'}
                 </Text>
               </View>
 
-              <View style={styles.toggleContainer}>
-                <TouchableOpacity
-                  style={[styles.toggleButton, isToggle && styles.activeToggle]}
-                  onPress={() => setIsToggle(true)}>
-                  <Text
+              {loading ? <Loading /> : ''}
+              <>
+                <View style={styles.toggleContainer}>
+                  <TouchableOpacity
                     style={[
-                      styles.toggleText,
-                      isToggle && styles.activeToggleText,
-                    ]}>
-                    Login
-                  </Text>
-                </TouchableOpacity>
+                      styles.toggleButton,
+                      isToggle && styles.activeToggle,
+                    ]}
+                    onPress={() => setIsToggle(true)}>
+                    <Text
+                      style={[
+                        styles.toggleText,
+                        isToggle && styles.activeToggleText,
+                      ]}>
+                      Login
+                    </Text>
+                  </TouchableOpacity>
 
-                <TouchableOpacity
-                  style={[
-                    styles.toggleButton,
-                    !isToggle && styles.activeToggle,
-                  ]}
-                  onPress={() => setIsToggle(false)}>
-                  <Text
+                  <TouchableOpacity
                     style={[
-                      styles.toggleText,
-                      !isToggle && styles.activeToggleText,
-                      
-                    ]}>
-                    Register
-                  </Text>
-                </TouchableOpacity>
-              </View>
-              {isToggle ? (
-                <Login navigation={navigation} spaceId={spaceId} />
-              ) : (
-                <Register spaceId={spaceId} />
-              )}
+                      styles.toggleButton,
+                      !isToggle && styles.activeToggle,
+                    ]}
+                    onPress={() => setIsToggle(false)}>
+                    <Text
+                      style={[
+                        styles.toggleText,
+                        !isToggle && styles.activeToggleText,
+                      ]}>
+                      Register
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+
+                {isToggle ? (
+                  <Login
+                    navigation={navigation}
+                    spaceId={spaceUser?.index}
+                    setLoading={setLoading}
+                  />
+                ) : (
+                  <Register
+                    spaceId={spaceUser?.index}
+                    navigation={navigation}
+                    setLoading={setLoading}
+                  />
+                )}
+              </>
             </View>
           </ScrollView>
         </TouchableWithoutFeedback>
@@ -123,10 +148,12 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 0,
     borderTopLeftRadius: 0,
   },
+  loadingIndicator: {
+    marginTop: 20, // Adjust as needed
+  },
   container: {
     flex: 1,
     backgroundColor: '#e3e3e3',
-    // position: 'relative',
     alignItems: 'center',
   },
   topStyle: {
@@ -151,7 +178,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: '17%',
     alignSelf: 'center',
-    zIndex: 100,
+    zIndex: 1,
   },
   toggleButton: {
     flex: 1,

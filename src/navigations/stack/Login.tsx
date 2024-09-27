@@ -13,10 +13,12 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  FlatList,
+   FlatList,
   Alert,
-  Platform,
+  Platform
+
 } from 'react-native';
+
 import {Controller, useForm} from 'react-hook-form';
 import {getRequestWithToken, postRequest, postRequestWithToken, setAuthToken, singleRequest} from '../../api/Api';
 import {useDispatch, useSelector} from 'react-redux';
@@ -37,6 +39,7 @@ type LoginData = {
 const Login: FC<{navigation: any; spaceId: string}> = ({
   navigation,
   spaceId,
+  setLoading
 }) => {
 
   const dispatch = useDispatch();
@@ -54,23 +57,29 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
     },
   });
 
-  
-  
-  
-  
-  console.log('Login Slice: ', loginUser);
-  
 
-  const onSubmit = async (loginData: LoginData) => {
-    try {
-      const fetchAPI = await singleRequest(
-        `/api/v1/users/user-login?space-id=${loginData.space_id}&email=${loginData.email}&password=${loginData.password}`,
-      );
+  const RegisterUser = useSelector(state => state.register.registerUser);
 
-      // console.log('Login Data: ', fetchAPI.data);
-      dispatch(addLoginUser(fetchAPI.data.data || fetchAPI.data));
 
-      //For Device Register
+  const userEmail = RegisterUser?.email;
+  const userPassword = RegisterUser?.password;
+
+  // console.log('Register User:', userEmail);
+  console.log('Login User:', loginUser);
+
+
+ const onSubmit = async (loginData: LoginData) => {
+   try {
+     setLoading(true);
+
+     const fetchAPI = await singleRequest(
+       `/api/v1/users/user-login?space-id=${loginData.space_id}&email=${loginData.email}&password=${loginData.password}`,
+     );
+
+     console.log('Login Data: ', fetchAPI.data);
+     dispatch(addLoginUser(fetchAPI.data.data || fetchAPI.data));
+
+     //For Device Register
       if (loginUser?.user?.is_device_register != true) {
         const deviceType = Platform.OS;
         const deviceModel = DeviceInfo.getBrand();
@@ -91,27 +100,27 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
 
         console.log('Device Info: ', response);
       }
+     if (fetchAPI.data.status === 'success') {
+       navigation.navigate('Home', {
+         screen: 'HomeStack',
+         params: {
+           user: loginUser.user,
+           token: loginUser.token,
+         },
+       });
+     }
 
-      if (fetchAPI.data.status === 'success') {
-        navigation.navigate('Home', {
-          screen: 'HomeStack',
-          params: {
-            spaceId: spaceId,
-            user: loginUser.user,
-            token: loginUser.token,
-          },
-        });
-      }
-
-      reset({
-        email: '',
-        password: '',
-        space_id: spaceId,
-      });
-    } catch (error) {
-      console.log('Failed to login:', error);
-    }
-  };
+     reset({
+       email: '',
+       password: '',
+       space_id: spaceId,
+     });
+   } catch (error) {
+     console.log('Failed to login:', error);
+   } finally {
+     setLoading(false);
+   }
+ };
 
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -120,6 +129,7 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
   return (
     <View style={styles.card}>
       <View style={{marginTop: 20}}>
+        {/* Email Input */}
         <View style={styles.inputContainer}>
           <Mail size={20} color="#000" style={styles.inputIcon} />
           <Controller
@@ -138,16 +148,6 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
             )}
             name="email"
           />
-          {/* {RegisterUser?.map(user => {
-            console.log('User Email: ', user.email);
-            console.log('User Password: ', user.password);
-            return (
-              <View key={user.id}>
-                <Text>{user.email}</Text>
-                <Text>{user.password}</Text>
-              </View>
-            );
-          })} */}
         </View>
         {errors.email && (
           <Text
@@ -160,6 +160,8 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
             Email is required.
           </Text>
         )}
+
+        {/* Password Input */}
         <View style={styles.inputContainer}>
           <LockIcon size={20} color="#000" style={styles.inputIcon} />
           <Controller
@@ -204,7 +206,6 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
             Password is required.
           </Text>
         )}
-
         {loginUser?.status === 'fail' && (
           <Text
             style={{
@@ -221,10 +222,15 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
           <TouchableOpacity
             style={styles.checkbox}
             onPress={() => setRememberMe(!rememberMe)}>
-            {rememberMe && <Check size={20} color="#fff" />}
+            {rememberMe && (
+              <Check size={20} color="#fff" style={{backgroundColor: 'blue'}} />
+            )}
           </TouchableOpacity>
           <Text style={styles.rememberText}>Remember me</Text>
         </View>
+
+        {/* Login Button */}
+
         <TouchableOpacity
           style={styles.loginButton}
           onPress={handleSubmit(onSubmit)}>
@@ -289,7 +295,6 @@ const styles = StyleSheet.create({
     marginRight: 8,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#2563eb',
   },
   rememberText: {
     fontSize: mainStyles.textFontSize,

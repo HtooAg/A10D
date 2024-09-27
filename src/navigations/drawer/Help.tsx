@@ -9,17 +9,17 @@ import {
 } from 'react-native';
 import { NavigationType } from '../../type_hint/navType';
 import HelpModal from '../../alert/HelpModal';
-import ContextProvider from '../../components/Context';
+import {ContextProvider, CustomProvider, useCustomContext} from '../../components/Context';
 import Header, { screenWidth } from '../Header';
 import { mainStyles } from '../../components/MainStyle';
 const Help: React.FC<NavigationType> = ({navigation}) => {
   const screenWidth = Dimensions.get('window').width;
-  const {
-    emailModalVisible,
-    setEmailModalVisible,
-    callModalVisible,
-    setCallModalVisible,
-  } = useContext(ContextProvider);
+  const {emailModalVisible,
+        setEmailModalVisible,
+        callModalVisible,
+        setCallModalVisible} = useCustomContext();
+
+  
   return (
     <View style={styles.container}>
       {emailModalVisible || callModalVisible ? <HelpModal /> : null}
