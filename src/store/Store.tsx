@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {combineReducers, configureStore} from '@reduxjs/toolkit';
-import {persistReducer, persistStore} from 'redux-persist';
+import {FLUSH, PAUSE, PERSIST, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE} from 'redux-persist';
 import loginSlice from '../features/login/loginSlice';
 import RegisterSlice from '../features/register/RegisterSlice';
 import ResetSlice from '../features/reset/ResetSlice';
@@ -10,7 +10,6 @@ import spaceSlice from '../features/space/spaceSlice';
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  // whitelist: ['login'],
 };
 
 // Combine your reducers (replace with actual reducers)
@@ -30,15 +29,7 @@ export const store = configureStore({
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: [
-          'persist/PERSIST',
-          'persist/REHYDRATE',
-          'persist/FLUSH',
-          'persist/PAUSE',
-          'persist/PURGE',
-          'persist/REGISTER',
-        ],
-        ignoredPaths: ['login.loginUser'], // Ignore paths where non-serializable data is stored
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }),
 });

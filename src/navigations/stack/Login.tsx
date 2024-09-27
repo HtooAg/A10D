@@ -13,14 +13,19 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+   FlatList,
+  Alert,
+  Platform
 
 } from 'react-native';
+
 import {Controller, useForm} from 'react-hook-form';
-import {singleRequest, postRequest} from '../../api/Api';
+import {getRequestWithToken, postRequest, postRequestWithToken, setAuthToken, singleRequest} from '../../api/Api';
 import {useDispatch, useSelector} from 'react-redux';
 import {addLoginUser} from '../../features/login/loginSlice';
 import {addRegisterUser} from '../../features/register/RegisterSlice';
 import { mainStyles } from '../../components/MainStyle';
+import DeviceInfo from 'react-native-device-info';
 
 
 type LoginData = {
@@ -36,6 +41,9 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
   spaceId,
   setLoading
 }) => {
+
+  const dispatch = useDispatch();
+  const loginUser = useSelector(state => state.login.loginUser);
   const {
     control,
     handleSubmit,
@@ -44,16 +52,14 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
   } = useForm({
     defaultValues: {
       space_id: spaceId,
-      email: '',
+      email: loginUser?.user?.email || '',
       password: '',
     },
   });
 
 
-
-  const dispatch = useDispatch();
   const RegisterUser = useSelector(state => state.register.registerUser);
-  const loginUser = useSelector(state => state.login.loginUser);
+
 
   const userEmail = RegisterUser?.email;
   const userPassword = RegisterUser?.password;
@@ -73,6 +79,27 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
      console.log('Login Data: ', fetchAPI.data);
      dispatch(addLoginUser(fetchAPI.data.data || fetchAPI.data));
 
+     //For Device Register
+      if (loginUser?.user?.is_device_register != true) {
+        const deviceType = Platform.OS;
+        const deviceModel = DeviceInfo.getBrand();
+        const systemVersion = DeviceInfo.getSystemVersion();
+        const uniqueId = await DeviceInfo.getUniqueId();
+        const deviceInfo = {
+          type: deviceType,
+          model: deviceModel,
+          os: systemVersion,
+          udid: uniqueId,
+        };
+        console.log(deviceInfo);
+        setAuthToken(loginUser?.token?.access_token);
+        const response = await postRequestWithToken(
+          `/api/v1/devices/register-device`,
+          deviceInfo,
+        );
+
+        console.log('Device Info: ', response);
+      }
      if (fetchAPI.data.status === 'success') {
        navigation.navigate('Home', {
          screen: 'HomeStack',
@@ -94,7 +121,6 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
      setLoading(false);
    }
  };
-
 
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -180,9 +206,6 @@ const Login: FC<{navigation: any; spaceId: string}> = ({
             Password is required.
           </Text>
         )}
-
-        {/* Remember Me */}
-
         {loginUser?.status === 'fail' && (
           <Text
             style={{

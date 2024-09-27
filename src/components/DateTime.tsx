@@ -3,12 +3,14 @@ import {View, Text} from 'react-native';
 import axios from 'axios';
 import moment, {Moment} from 'moment-timezone';
 import * as RNLocalize from 'react-native-localize';
+import { mainStyles } from './MainStyle';
 
 const DateTime = () => {
   const [currentTime, setCurrentTime] = useState<string>('');
   const [currentDate, setCurrentDate] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const initialTimeRef = useRef<Moment | null>(null);
+  const [localTime, setLocalTime] = useState(new Date());
 
   const fetchTime = async () => {
     setIsLoading(true);
@@ -48,28 +50,72 @@ const DateTime = () => {
     return () => clearInterval(intervalId);
   }, []);
 
+  useEffect(() => {
+    // Update the time every second
+    const interval = setInterval(() => {
+      setLocalTime(new Date());
+    }, 1000);
+
+    // Cleanup the interval on component unmount
+    return () => clearInterval(interval);
+  }, []);
+
+  // Time components
+  const hours = localTime.getHours();
+  const minutes = localTime.getMinutes().toString().padStart(2, '0');
+  const seconds = localTime.getSeconds().toString().padStart(2, '0');
+
+  // Day of the week
+  const dayOfWeek = localTime.toLocaleString('default', {weekday: 'short'});
+
+  // Date components
+  const year = localTime.getFullYear();
+  const month = localTime.toLocaleString('default', {month: 'short'}); // Full month name
+  const date = localTime.getDate();
+
   return (
     <>
       {isLoading ? (
-        <Text style={{color: 'white', fontSize: 14}}>Loading....</Text>
-      ) : (
-        <View>
+        <View style={{alignItems: 'center', justifyContent: 'center'}}>
           <Text
             style={{
-              fontSize: 24,
-              fontWeight: 'bold',
-              color: 'white',
-              letterSpacing: 1,
+              fontSize: 35,
+              color: '#fff',
+              marginBottom: 20,
+              marginTop: 20,
+              fontFamily: mainStyles.fontPoppinsRegular,
+            }}>
+            {hours}:{minutes}:{seconds} {hours > 12 ? 'PM' : 'AM'}
+          </Text>
+          <Text
+            style={{
+              fontSize: 20,
+              color: '#fff',
+              marginBottom: 20,
+              fontFamily: mainStyles.fontPoppinsRegular,
+            }}>
+            {dayOfWeek}, {date} {month} {year}
+          </Text>
+        </View>
+      ) : (
+        <View style={{alignItems: 'center', justifyContent: 'center'}}>
+          <Text
+            style={{
+              fontSize: 35,
+              color: '#fff',
+              marginBottom: 20,
+              marginTop: 20,
+              fontFamily: mainStyles.fontPoppinsRegular,
               textAlign: 'center',
             }}>
             {currentTime}
           </Text>
           <Text
             style={{
-              fontSize: 18,
-              marginTop: 5,
-              color: 'white',
-              textAlign: 'center',
+              fontSize: 20,
+              color: '#fff',
+              marginBottom: 20,
+              fontFamily: mainStyles.fontPoppinsRegular,
             }}>
             {currentDate}
           </Text>

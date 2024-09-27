@@ -5,25 +5,45 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {Text, StyleSheet, View, TouchableOpacity} from 'react-native';
+import {Text, StyleSheet, View, TouchableOpacity, FlatList} from 'react-native';
 import {NavigationType} from '../../type_hint/navType';
 import {ChevronLeft} from 'lucide-react-native';
 import GetLocation from './GetLocation';
 import MapView, {Marker} from 'react-native-maps';
 import BottomSheet, {BottomSheetView} from '@gorhom/bottom-sheet';
 import { mainStyles } from '../../components/MainStyle';
+import { getRequestWithToken, setAuthToken } from '../../api/Api';
+import { useSelector } from 'react-redux';
 
-const AttendanceDetailOfLocation: React.FC<NavigationType> = ({navigation}) => {
+const AttendanceDetailOfLocation: React.FC<NavigationType> = ({navigation, route}) => {
   const [markers, setMarkers] = useState([
     {latitude: 16.8501223, longitude: 96.1282766, title: 'Marker 1'},
   ]);
-
   const [deviceLocation, setDeviceLocation] = useState<{
     deviceLatitude: number;
     deviceLongitude: number;
   } | null>(null);
-
   const bottomSheetRef = useRef<BottomSheet>(null);
+
+  const [attendanceDetail, setAttendanceDetail] = useState([]);
+  const loginUser = useSelector(state => state.login.loginUser);
+  const {id, item} = route.params;
+  console.log('Map Id: ', id);
+  console.log('Map Detail: ', item);
+  // console.log('Attendace Data', attendanceDetail);
+
+  const fetchAttendandceDetail = async () => {
+    try {
+      setAuthToken(loginUser.token.access_token);
+      const response = await getRequestWithToken(
+        `/api/v1/attendances/${id}`,
+      );
+      setAttendanceDetail(response.data.data);
+      console.log('Attendace Data', attendanceDetail);
+    } catch (error) {
+      console.log('Error:', error);
+    }
+  };
 
   useEffect(() => {
     const fetchLocation = async () => {
@@ -41,6 +61,7 @@ const AttendanceDetailOfLocation: React.FC<NavigationType> = ({navigation}) => {
       }
     };
     fetchLocation();
+    fetchAttendandceDetail();
   }, []);
 
   const handleSheetChanges = useCallback((index: number) => {
@@ -51,9 +72,12 @@ const AttendanceDetailOfLocation: React.FC<NavigationType> = ({navigation}) => {
     <View style={styles.container}>
       <View style={styles.navBar}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <ChevronLeft color={'#fff'} size={35} strokeWidth={0.9} />
+          <ChevronLeft color={'#fff'} size={35} />
         </TouchableOpacity>
-        <Text style={styles.navBar_Txt}>Location(MICT)</Text>
+        <Text
+          style={[styles.navBar_Txt, {fontFamily: mainStyles.fontPoppinsBold}]}>
+          {item?.location_name}
+        </Text>
         <Text style={{opacity: 0}}>Detail</Text>
       </View>
       <MapView
@@ -83,13 +107,13 @@ const AttendanceDetailOfLocation: React.FC<NavigationType> = ({navigation}) => {
         snapPoints={[300, 500]}>
         <BottomSheetView style={styles.sheetContainer}>
           <View style={styles.sheetCardContainer}>
-            <Text style={styles.sheetTitle}>MICT</Text>
+            <Text style={styles.sheetTitle}>{item?.location_name}</Text>
             <View style={styles.sheetCard}>
               <View style={{...styles.sheetCard_Item}}>
                 <Text
                   style={{
                     ...styles.sheetCard_ItemTxt,
-                    fontWeight: '700',
+                    fontFamily: mainStyles.fontPoppinsBold,
                     fontSize: 18,
                   }}>
                   Action
@@ -97,9 +121,8 @@ const AttendanceDetailOfLocation: React.FC<NavigationType> = ({navigation}) => {
                 <Text
                   style={{
                     ...styles.sheetCard_ItemTxt,
-                    fontWeight: '700',
+                    fontFamily: mainStyles.fontPoppinsBold,
                     fontSize: 18,
-                    paddingRight: 30,
                   }}>
                   Time
                 </Text>
@@ -109,20 +132,33 @@ const AttendanceDetailOfLocation: React.FC<NavigationType> = ({navigation}) => {
                   style={{
                     ...styles.sheetCard_ItemTxt,
                     textTransform: 'uppercase',
+                    fontFamily: mainStyles.fontPoppinsItalic,
                   }}>
-                  Check-In
+                  {item?.action}
                 </Text>
-                <Text style={styles.sheetCard_ItemTxt}>hh-mm-ss</Text>
+                <Text
+                  style={[
+                    styles.sheetCard_ItemTxt,
+                    {fontFamily: mainStyles.fontPoppinsItalic},
+                  ]}>
+                  {item?.time}
+                </Text>
               </View>
               <View style={{...styles.sheetCard_Item, marginTop: 50}}>
                 <Text
                   style={{
                     ...styles.sheetCard_ItemTxt,
-                    fontWeight: '700',
+                    textTransform: 'uppercase',
+                    fontFamily: mainStyles.fontPoppinsBold,
                   }}>
                   Latitude
                 </Text>
-                <Text style={{...styles.sheetCard_ItemTxt, fontWeight: '700'}}>
+                <Text
+                  style={{
+                    ...styles.sheetCard_ItemTxt,
+                    textTransform: 'uppercase',
+                    fontFamily: mainStyles.fontPoppinsBold,
+                  }}>
                   Longitude
                 </Text>
               </View>
@@ -131,14 +167,35 @@ const AttendanceDetailOfLocation: React.FC<NavigationType> = ({navigation}) => {
                   style={{
                     ...styles.sheetCard_ItemTxt,
                     textTransform: 'uppercase',
+                    fontFamily: mainStyles.fontPoppinsItalic,
                   }}>
-                  {deviceLocation?.deviceLatitude}
+                  {item?.latitude}
                 </Text>
-                <Text style={styles.sheetCard_ItemTxt}>
-                  {deviceLocation?.deviceLongitude}
+                <Text
+                  style={[
+                    styles.sheetCard_ItemTxt,
+                    {fontFamily: mainStyles.fontPoppinsItalic},
+                  ]}>
+                  {item?.longitude}
                 </Text>
               </View>
             </View>
+          </View>
+          <View
+            style={{
+              borderTopWidth: 1,
+              borderColor: '#ccc',
+              marginHorizontal: 10,
+            }}>
+            <FlatList
+              data={attendanceDetail}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({item, index}) => (
+                <View>
+                  
+                </View>
+              )}
+            />
           </View>
         </BottomSheetView>
       </BottomSheet>
@@ -179,8 +236,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 16,
-    color: '#0032fc',
-    // color: '#031f0a',
+    color: mainStyles.backgroundColor,
   },
   sheetCardContainer: {
     paddingHorizontal: 20,
@@ -194,8 +250,8 @@ const styles = StyleSheet.create({
     width: '80%',
   },
   sheetCard_ItemTxt: {
-    color: '#666',
-    fontSize: 16,
+    color: mainStyles.textColor,
+    fontSize: mainStyles.textFontSize,
   },
 });
 

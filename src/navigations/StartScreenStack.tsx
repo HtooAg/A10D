@@ -2,24 +2,29 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import DrawerApp from './DrawerApp';
 import StackScreens from './StackScreens';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const StartScreenStack = () => {
+  const queryClient = new QueryClient();
   const Stack = createNativeStackNavigator();
 
   return (
-    <Stack.Navigator initialRouteName="StackScreen">
-      <Stack.Screen
-        name="StackScreen"
-        component={StackScreens}
-        options={{headerShown: false}}
-      />
+    <QueryClientProvider client={queryClient}>
 
-      <Stack.Screen
-        name="Home"
-        component={DrawerApp}
-        options={{headerShown: false}}
-      />
-    </Stack.Navigator>
+      <Stack.Navigator initialRouteName="StackScreen">
+        <Stack.Screen
+          name="StackScreen"
+          component={StackScreens}
+          options={{headerShown: false}}
+        />
+
+        <Stack.Screen
+          name="Home"
+          component={DrawerApp}
+          options={{headerShown: false}}
+        />
+      </Stack.Navigator>
+    </QueryClientProvider>
   );
 };
 

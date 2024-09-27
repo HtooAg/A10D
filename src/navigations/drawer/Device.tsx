@@ -13,6 +13,9 @@ import DeviceChange from '../../alert/DeviceChange';
 import ContextProvider from '../../components/Context';
 import { mainStyles } from '../../components/MainStyle';
 import { screenWidth } from '../Header';
+import { singleRequest } from './../../api/Api';
+import DeviceInfo from 'react-native-device-info';
+import { useSelector } from 'react-redux';
 
 type Device = {
   setChangeDevice: boolean;
@@ -21,6 +24,20 @@ type Types = Device & NavigationType;
 const Device: React.FC<Types> = ({navigation}) => {
   const {changeDevice, setChangeDevice} = useContext(ContextProvider);
   const screenWidth = Dimensions.get('window').width;
+  const loginUser = useSelector(state => state.login.loginUser);
+
+  const handleCreateDevice = async () => {
+    try {
+      let brand = DeviceInfo.getBrand();
+      let buildNumber = DeviceInfo.getBuildNumber();
+      console.log("Device: ", brand, buildNumber)
+      const response = await singleRequest(`/api/v1/device/create`); 
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+
   return (
     <View
       style={{flex: 1, position: 'relative', zIndex: 0, alignItems: 'center'}}>
@@ -65,7 +82,7 @@ const Device: React.FC<Types> = ({navigation}) => {
                   fontSize: mainStyles.textFontSize,
                   fontFamily: mainStyles.fontPoppinsRegular,
                 }}>
-                Android version...
+                Android version 8.0.0
               </Text>
             </View>
             <View
