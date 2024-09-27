@@ -24,15 +24,15 @@ export const getRequestWithToken = async (URL: string) =>
 export const postRequestWithToken = async (URL: string, data: any) =>
   axiosInstanceWithToken.post(URL, data);
 
-export const getRequest = async URL => await axiosInstance.get(URL);
+export const getRequest = async (URL: string) => await axiosInstance.get(URL);
 
-export const postRequest = async (URI, payload) => await axiosInstance.post(URI, payload);
+export const postRequest = async (URI: string, payload: any) => await axiosInstance.post(URI, payload);
 
-export const singleRequest = async (URI) => await axiosInstance.post(URI);
+export const singleRequest = async (URI: string) => await axiosInstance.post(URI);
 
 //    export const putRequest = async (URI, payload) => await axiosInstance.put(URI, payload);
 
 //    export const patchRequest = async (URI, payload) =>
 //      await axiosInstance.patch(URI, payload);
 
-export const deleteRequest = async URI => await axiosInstance.delete(URI);
+export const deleteRequest = async (URI: string) => await axiosInstance.delete(URI);

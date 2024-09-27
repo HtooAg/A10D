@@ -143,12 +143,12 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     color: '#000',
     fontSize: mainStyles.textFontSize,
-    fontFamily: mainStyles.fontPoppinsRegular,
+    fontFamily: mainStyles.fontPoppinsItalic,
   },
   loginButton: {
     backgroundColor: '#2563eb',
     borderRadius: 12,
-    paddingVertical: 16,
+    paddingVertical: 10,
     alignSelf: 'center',
     alignItems: 'center',
     marginTop: 50,
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
   loginButtonText: {
     color: 'white',
     fontSize: 18,
-    fontWeight: '600',
+    fontFamily: mainStyles.fontPoppinsSemiBoldItalic,
     textTransform: 'uppercase',
   },
 });

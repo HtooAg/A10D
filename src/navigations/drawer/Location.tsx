@@ -36,7 +36,7 @@ const loginUser = useSelector(state => state.login.loginUser);
       </View>
 
       <View style={styles.cardNoAtt}>
-        <ClipboardPenLine color={'#ccc'} size={250} strokeWidth={0.5} />
+        <ClipboardPenLine color={'#ccc'} size={250} strokeWidth={0.1} />
         <Text
           style={{
             color: '#000',

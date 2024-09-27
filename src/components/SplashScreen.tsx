@@ -95,32 +95,22 @@ const SplashScreen = () => {
         end={{x: 0, y: 1}}>
         <View style={styles.iconContainer}>
           <Image
-            style={[
-              styles.icon,
-              {
-                transform: [{perspective: 1000}, {rotateY}],
-              },
-            ]}
+            style={[styles.icon]}
             source={require('../assets/imgs/logo-removebg-preview.png')}
           />
           <Text style={styles.text}>A 10 D</Text>
         </View>
 
         <View style={styles.textContainer}>
-          <View
-            style={{
-              width: 200,
-            }}>
+          
             <Text style={styles.fullText}>{displayedText}</Text>
-          </View>
+            <Text style={styles.endText}>{displayedEndText}</Text>
 
-          <View
+          {/* <View
             style={{
               width: 200,
               alignSelf: 'flex-end',
-            }}>
-            <Text style={styles.endText}>{displayedEndText}</Text>
-          </View>
+            }}></View> */}
         </View>
 
         <View style={{flex: 1}}></View>
@@ -141,7 +131,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     width: 130,
-    height: 130,
+    height: 150,
     fontWeight: 'bold',
   },
   text: {
@@ -155,11 +145,14 @@ const styles = StyleSheet.create({
   iconContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    flex: 1,
+    flex: 2,
   },
   textContainer: {
-    width: 320,
+    // width: 520,
+    flex: 1,
+    flexDirection: 'row',
     justifyContent: 'center',
+    alignItems: 'center'
   },
   fullText: {
     fontSize: mainStyles.textFontSize,

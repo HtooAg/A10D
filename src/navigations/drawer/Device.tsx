@@ -1,10 +1,11 @@
-import React, {Component, useContext, useState} from 'react';
+import React, {Component, useContext, useEffect, useState} from 'react';
 import {
   Text,
   StyleSheet,
   View,
   TouchableOpacity,
   Dimensions,
+  FlatList,
 } from 'react-native';
 import {NavigationType} from '../../type_hint/navType';
 import {AlignLeft, Smartphone, HomeIcon} from 'lucide-react-native';
@@ -13,7 +14,7 @@ import DeviceChange from '../../alert/DeviceChange';
 import ContextProvider from '../../components/Context';
 import { mainStyles } from '../../components/MainStyle';
 import { screenWidth } from '../Header';
-import { singleRequest } from './../../api/Api';
+import { getRequestWithToken, setAuthToken, singleRequest } from './../../api/Api';
 import DeviceInfo from 'react-native-device-info';
 import { useSelector } from 'react-redux';
 
@@ -23,21 +24,20 @@ type Device = {
 type Types = Device & NavigationType;
 const Device: React.FC<Types> = ({navigation}) => {
   const {changeDevice, setChangeDevice} = useContext(ContextProvider);
+  const [deviceData, setDeviceData] = useState([]);
   const screenWidth = Dimensions.get('window').width;
   const loginUser = useSelector(state => state.login.loginUser);
 
-  const handleCreateDevice = async () => {
-    try {
-      let brand = DeviceInfo.getBrand();
-      let buildNumber = DeviceInfo.getBuildNumber();
-      console.log("Device: ", brand, buildNumber)
-      const response = await singleRequest(`/api/v1/device/create`); 
-    } catch (error) {
-      console.error(error)
-    }
-  }
+  const responseOfDevice = async () => {
+    await setAuthToken(loginUser?.token?.access_token);
+    const response = await getRequestWithToken(`/api/v1/devices`);
+    setDeviceData(response.data.data);
+    console.log('Device Data: ', deviceData);
+  };
 
-
+  useEffect(() => {
+    responseOfDevice();
+  }, []);
   return (
     <View
       style={{flex: 1, position: 'relative', zIndex: 0, alignItems: 'center'}}>
@@ -58,46 +58,54 @@ const Device: React.FC<Types> = ({navigation}) => {
         </TouchableOpacity>
         <Text style={styles.headerTxt}>Device Register List</Text>
       </View>
-      <View style={{flex: 2, marginVertical: screenWidth / 2, rowGap: 10}}>
+      <View style={{flex: 2, marginVertical: screenWidth / 3, rowGap: 10}}>
         <TouchableOpacity
           style={styles.changeDevice}
           onPress={() => setChangeDevice(true)}>
           <Smartphone color={'#000'} size={35} strokeWidth={1} />
           <Text style={styles.changeDevice_Txt}>Change Device</Text>
         </TouchableOpacity>
-        <View style={{...styles.card}}>
-          <ScrollView contentContainerStyle={{rowGap: 20}}>
-            <View style={styles.cardBody}>
-              <Text
-                style={{
-                  color: '#000',
-                  fontSize: mainStyles.textFontSize,
-                  fontFamily: mainStyles.fontPoppinsRegular,
-                }}>
-                Android
-              </Text>
-              <Text
-                style={{
-                  color: '#000',
-                  fontSize: mainStyles.textFontSize,
-                  fontFamily: mainStyles.fontPoppinsRegular,
-                }}>
-                Android version 8.0.0
-              </Text>
-            </View>
-            <View
-              style={{
-                ...styles.cardBody,
-                backgroundColor: '#63b307',
-                width: '90%',
-                height: 50,
-                alignSelf: 'center',
-                borderRadius: 10,
-              }}>
-              <Text style={styles.cardTxt}>CPH1909</Text>
-              <Text style={styles.cardTxt}>Approved</Text>
-            </View>
-          </ScrollView>
+        <View style={styles.card}>
+          
+            <FlatList
+              // style={{flex: 1}}
+              data={deviceData}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({item, index}) => (
+                <View>
+                  <View style={styles.cardBody}>
+                    <Text
+                      style={{
+                        color: '#000',
+                        fontSize: mainStyles.textFontSize,
+                        fontFamily: mainStyles.fontPoppinsRegular,
+                      }}>
+                      {item?.type}
+                    </Text>
+                    <Text
+                      style={{
+                        color: '#000',
+                        fontSize: mainStyles.textFontSize,
+                        fontFamily: mainStyles.fontPoppinsRegular,
+                      }}>
+                      {item?.os}
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      ...styles.cardBody,
+                      backgroundColor: '#63b307',
+                      width: '90%',
+                      height: 50,
+                      alignSelf: 'center',
+                      borderRadius: 10,
+                    }}>
+                    <Text style={styles.cardTxt}>{item?.model}</Text>
+                    <Text style={styles.cardTxt}>{item?.state}</Text>
+                  </View>
+                </View>
+              )}
+            />
         </View>
       </View>
     </View>
@@ -148,7 +156,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 10,
     elevation: 5,
-    // flex: 2
+    // flex: 1
   },
   cardBody: {
     flexDirection: 'row',

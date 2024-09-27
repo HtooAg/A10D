@@ -130,7 +130,7 @@ const Attendance: React.FC<NavigationType> = ({navigation}) => {
   
 
   const formatTime = time => {
-    const [hours, minutes, seconds] = time.split(':');
+    const [hours, minutes, seconds] = time?.split(':');
     const period = hours >= 12 ? 'PM' : 'AM';
     const formattedHours = hours % 12 || 12; // convert 24-hour format to 12-hour format
     return `${formattedHours}:${minutes} ${period}`;
@@ -208,6 +208,7 @@ const Attendance: React.FC<NavigationType> = ({navigation}) => {
               {attendanceData.length > 0 && showCalander == true ? (
                 <View style={[styles.cardWithAtt]}>
                   <FlatList
+                    showsVerticalScrollIndicator={false}
                     data={attendanceData}
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({item, index}) => (
@@ -234,7 +235,7 @@ const Attendance: React.FC<NavigationType> = ({navigation}) => {
                             //     {id: item.id, item: item},
                             //   )
                             // }
-                            >
+                          >
                             <ChevronRight color={'#000'} size={35} />
                           </TouchableOpacity>
                         </View>
@@ -249,7 +250,9 @@ const Attendance: React.FC<NavigationType> = ({navigation}) => {
                               fontFamily: mainStyles.fontPoppinsRegular,
                               color: '#e3e3e3',
                             }}>
-                            {formatTime(item?.check_in_time)}
+                            {moment(item?.check_in_time, 'HH:mm:ss').format(
+                              'h:mm:ss A',
+                            )}
                           </Text>
                           <Text
                             style={{
@@ -341,8 +344,13 @@ const Attendance: React.FC<NavigationType> = ({navigation}) => {
                           fontFamily: mainStyles.fontPoppinsRegular,
                           color: '#e3e3e3',
                         }}>
-                        {formatTime(item?.check_in_time)} -{' '}
-                        {formatTime(item?.check_out_time)}
+                        {moment(item?.check_in_time, 'HH:mm:ss').format(
+                          'h:mm:ss A',
+                        )}
+                        -
+                        {moment(item?.check_out_time, 'HH:mm:ss').format(
+                          'h:mm:ss A',
+                        )}
                       </Text>
                     </View>
                   </View>

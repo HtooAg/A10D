@@ -74,7 +74,7 @@ const DateTime = () => {
   const date = localTime.getDate();
 
   return (
-    <>
+    <View>
       {isLoading ? (
         <View style={{alignItems: 'center', justifyContent: 'center'}}>
           <Text
@@ -98,7 +98,7 @@ const DateTime = () => {
           </Text>
         </View>
       ) : (
-        <View style={{alignItems: 'center', justifyContent: 'center'}}>
+        <View style={{alignItems: 'center',}}>
           <Text
             style={{
               fontSize: 35,
@@ -106,7 +106,6 @@ const DateTime = () => {
               marginBottom: 20,
               marginTop: 20,
               fontFamily: mainStyles.fontPoppinsRegular,
-              textAlign: 'center',
             }}>
             {currentTime}
           </Text>
@@ -114,14 +113,13 @@ const DateTime = () => {
             style={{
               fontSize: 20,
               color: '#fff',
-              marginBottom: 20,
               fontFamily: mainStyles.fontPoppinsRegular,
             }}>
             {currentDate}
           </Text>
         </View>
       )}
-    </>
+    </View>
   );
 };
 
